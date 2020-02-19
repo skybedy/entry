@@ -1,0 +1,26 @@
+<?php
+class Administrace extends Controller{
+
+	function __construct() {
+		parent::__construct();
+		$this->view->js = Array('administrace/js/default.js'); 
+		require 'util/auth.php';
+		session_start();
+		New Auth($_SESSION['race_id']); 
+	}
+	
+	public function Index(){
+		$this->view->VypisPrihlasek = $this->model->Index();
+		$this->view->IdZavodu = $this->model->IdZavodu;
+		$this->view->Render('administrace/index');
+	}
+	
+	
+	
+	public function zmena_udaju(){
+		$this->model->ZmenaUdaju();
+		//header('Location: '.URL.'administrace');
+	}
+ }	
+ 
+?>

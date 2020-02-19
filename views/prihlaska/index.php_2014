@@ -1,0 +1,324 @@
+<?php
+	(Session::get('udaje') == true) ? ($udaje = unserialize(Session::get('udaje'))) : ($udaje = false);
+	if(Session::get('race_id')== 118){
+		$h1 = 'Prihláška na ŽITNOOSTROVSKÝ POL MARATÓN / Jelentkezési ív a Csallóközi félmaratonra';
+	}
+	else{
+		$h1 = 'Přihláška k závodu '.$this->NazevZavodu.' '.$this->RokZavodu;
+	}
+?>	
+<h1><?php echo $h1 ?></h1>
+<fieldset id="fieldset_prihlasovaci_formular">
+	<legend>Přihlašovací formulář</legend>
+<form action="<?php echo URL;?>prihlaska/xhrOvereni" id="prihlasovaci_formular"  method="post">
+
+    <?php
+	$race_id = Session::get('race_id'); 
+	if($race_id == 25){
+	    require 'forms/konec_prihlasek.php';
+	}
+	elseif($race_id == 69){ //valachiarun přerov
+	    require 'forms/valachiarun.php';
+	}
+	elseif($race_id == 76){ //valachiarun přerov
+	    require 'forms/hostalkovice.php';
+	}
+	elseif($race_id == 64){ //varnsdorf
+	    require 'forms/konec_prihlasek.php';
+	}
+	elseif($race_id == 70){ //valachiarun přerov
+	    require 'forms/vetrkovice.php';
+	}
+	elseif($race_id == 9){
+	    require 'forms/koprivnice.php';
+	}
+	elseif($race_id == 61){
+	    require 'forms/konec_prihlasek.php';
+	}
+	elseif($race_id == 4){
+	    require 'forms/konec_prihlasek.php';
+	}
+	elseif($race_id == 51){
+	    echo '<p>Registrace na tento závod je možná pouze na <a href="http://www.sokolovskyctvrtmaraton.cz/prihlasky">zde</a></p>';
+	}
+	elseif($race_id == 19){
+	    require 'forms/konec_prihlasek.php';
+	}
+	elseif($race_id == 36){
+	    require 'forms/konec_prihlasek.php';
+	}
+	elseif($race_id == 50){
+	    require 'forms/skuhrov.php';
+	}
+	elseif($race_id == 41){
+	    require 'forms/kuchyna.php';
+	}
+	elseif($race_id == 5){
+	    require 'forms/belsky_okruh_1.php';
+	}
+	elseif($race_id == 78){
+	    require 'forms/default_pol.php';
+	}
+	elseif($race_id == 26){ //valachiarun vsetin
+	    if(Session::get('poradi_zavodu')){
+		$poradi_zavodu = Session::get('poradi_zavodu');
+	    }
+	    else{
+		$poradi_zavodu = false;
+	    }
+
+	?>
+	    <select id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-zavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+		<option></option>
+		<option value="1" <?php echo ((isset($poradi_zavodu) && $poradi_zavodu == 1) ? ('selected="selected"') : ('')) ?>>Závody jednotlivců</option>
+		<!--<option value="2" <?php echo ((isset($poradi_zavodu) && $poradi_zavodu == 2) ? ('selected="selected"') : ('')) ?>>Závod týmů (95km)</option>-->
+		<option value="3" <?php echo ((isset($poradi_zavodu) && $poradi_zavodu == 3) ? ('selected="selected"') : ('')) ?>>Rodinný běh</option>
+	    </select>&nbsp;Vyberte, který se závodů chcete absolvovat<br /><br />
+	    <?php	
+	    switch($poradi_zavodu){
+		case 1:
+		    require 'forms/valachiarun_vsetin_jednotlivci.php';
+		break;
+		case 2:
+		    require 'forms/valachiarun_vsetin_druzstva.php';
+		break;
+		case 3:
+		    require 'forms/valachiarun_vsetin_rodinny_beh.php';
+		break;
+	    }
+	}
+	elseif($race_id == 18){ //miniduatlon
+	    if(Session::get('poradi_podzavodu')){
+		$poradi_podzavodu = Session::get('poradi_podzavodu');
+	    }
+	    else{
+		$poradi_podzavodu = false;
+	    }
+
+	?>
+	    <select id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-podzavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+		<option></option>
+		<option value="1" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 1) ? ('selected="selected"') : ('')) ?>>Závod jednotlivců</option>
+		<option value="2" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 2) ? ('selected="selected"') : ('')) ?>>Závod dětí do 15 let</option>
+		<option value="3" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 3) ? ('selected="selected"') : ('')) ?>>Závod štafet</option>
+	    </select>&nbsp;Vyberte, který se závodů chcete absolvovat<br /><br />
+	    <?php	
+	    switch($poradi_podzavodu){
+		case 1:
+		    require 'forms/konec_prihlasek.php';
+		break;
+		case 2:
+		    require 'forms/konec_prihlasek.php';
+		break;
+		case 3:
+		    require 'forms/konec_prihlasek.php';
+		break;
+	    }
+	}
+	
+	
+	
+	elseif($race_id == 3){ //12 hodin zilina
+	    if(Session::get('poradi_podzavodu')){
+		$poradi_podzavodu = Session::get('poradi_podzavodu');
+	    }
+	    else{
+		$poradi_podzavodu = false;
+	    }
+
+	?>
+	<select id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-podzavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+	    <option></option>
+	    <option value="1" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 1) ? ('selected="selected"') : ('')) ?>>Závod jednotlivců</option>
+	    <option value="2" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 2) ? ('selected="selected"') : ('')) ?>>Závod 2-členných týmů</option>
+	    <option value="3" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 3) ? ('selected="selected"') : ('')) ?>>Závod 4-členných týmů</option>
+	</select>&nbsp;Vyberte, který se závodů chcete absolvovat<br /><br />
+	<?php
+	    switch($poradi_podzavodu){
+		case 1:
+		    require 'forms/dema12_1.php';
+		break;
+		case 2:
+		    require 'forms/dema12_2.php';
+		break;
+		case 3:
+		    require 'forms/dema12_3.php';
+		break;
+	    }
+	}
+	elseif($race_id == 2){ //24 hodin zilina
+	    if(Session::get('poradi_podzavodu')){
+		$poradi_podzavodu = Session::get('poradi_podzavodu');
+	    }
+	    else{
+		$poradi_podzavodu = false;
+	    }
+
+	?>
+	<select id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-podzavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+	    <option></option>
+	    <option value="1" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 1) ? ('selected="selected"') : ('')) ?>>Závod jednotlivců</option>
+	    <option value="2" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 2) ? ('selected="selected"') : ('')) ?>>Závod 2-členných týmů</option>
+	    <option value="3" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 3) ? ('selected="selected"') : ('')) ?>>Závod 4-členných týmů</option>
+	    <option value="4" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 4) ? ('selected="selected"') : ('')) ?>>Závod firemních týmů</option>
+	</select>&nbsp;Vyberte, který se závodů chcete absolvovat<br /><br />
+	<?php
+	    switch($poradi_podzavodu){
+		case 1:
+		    require 'forms/zilina24_1.php';
+		break;
+		case 2:
+		    require 'forms/zilina24_2.php';
+		break;
+		case 3:
+		    require 'forms/zilina24_3.php';
+		break;
+		case 4:
+		    require 'forms/zilina24_4.php';
+		break;
+	    }
+	}
+
+	elseif($race_id == 11){ //bystřička
+	    if(Session::get('poradi_podzavodu')){
+		$poradi_podzavodu = Session::get('poradi_podzavodu');
+	    }
+	    else{
+		$poradi_podzavodu = false;
+	    }
+
+	?>
+	<select id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-podzavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+	    <option></option>
+	    <option value="1" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 1) ? ('selected="selected"') : ('')) ?>>Závod jednotlivců</option>
+	    <option value="2" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 2) ? ('selected="selected"') : ('')) ?>>Závod 2-členných týmů</option>
+	    <option value="3" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 3) ? ('selected="selected"') : ('')) ?>>Závod 4-členných týmů</option>
+	</select>&nbsp;Vyberte, který se závodů chcete absolvovat<br /><br />
+	<?php
+	    switch($poradi_podzavodu){
+		case 1:
+		    require 'forms/bystricka_1.php';
+		break;
+		case 2:
+		    require 'forms/bystricka_2.php';
+		break;
+		case 3:
+		    require 'forms/bystricka_3.php';
+		break;
+	    }
+	}
+	elseif($race_id == 42){ //kuchyna
+	    if(Session::get('poradi_podzavodu')){
+		$poradi_podzavodu = Session::get('poradi_podzavodu');
+	    }
+	    else{
+		$poradi_podzavodu = false;
+	    }
+
+	?>
+	<select id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-podzavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+	    <option></option>
+	    <option value="1" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 1) ? ('selected="selected"') : ('')) ?>>Závod jednotlivců</option>
+	    <option value="2" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 2) ? ('selected="selected"') : ('')) ?>>Závod 2-členných týmů</option>
+	    <option value="3" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 3) ? ('selected="selected"') : ('')) ?>>Závod 4-členných týmů</option>
+	</select>&nbsp;Vyberte, který se závodů chcete absolvovat<br /><br />
+	<?php
+	    switch($poradi_podzavodu){
+		case 1:
+		    require 'forms/kuchyna_1.php';
+		break;
+		case 2:
+		    require 'forms/kuchyna_2.php';
+		break;
+		case 3:
+		    require 'forms/kuchyna_3.php';
+		break;
+	    }
+	}
+	
+	elseif($race_id == 60){ //kytlice 2014
+	    if(Session::get('poradi_podzavodu')){
+		$poradi_podzavodu = Session::get('poradi_podzavodu');
+	    }
+	    else{
+		$poradi_podzavodu = false;
+	    }
+
+	?>
+	<select id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-podzavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+	    <option></option>
+	    <option value="1" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 1) ? ('selected="selected"') : ('')) ?>>Závod jednotlivců</option>
+	    <option value="2" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 2) ? ('selected="selected"') : ('')) ?>>Závod družstev</option>
+	</select>&nbsp;Vyberte, který se závodů chcete absolvovat<br /><br />
+	<?php
+	    switch($poradi_podzavodu){
+		case 1:
+		    require 'forms/konec_prihlasek.php';
+		break;
+		case 2:
+		    require 'forms/konec_prihlasek.php';
+		break;
+	    }
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	elseif($race_id == 83){ //ODRIVOUS
+		/*
+		 * tenhle závod se musí dělit na závody a ty závody ještě na podzávody, proto tady mám hlavní select jiný
+		 * název proměnné než 24h
+		 */
+		
+		if(Session::get('poradi_zavodu')){
+				$poradi_zavodu = Session::get('poradi_zavodu');
+			}
+			else{
+				$poradi_zavodu = false;
+			}
+
+	?>
+			<select id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-zavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+				<option></option>
+				<option value="1" <?php echo ((isset($poradi_zavodu) && $poradi_zavodu == 1) ? ('selected="selected"') : ('')) ?>>Závod jednotlivců</option>
+				<option value="2" <?php echo ((isset($poradi_zavodu) && $poradi_zavodu == 2) ? ('selected="selected"') : ('')) ?>>Závod mixů</option>
+			</select>&nbsp;Vyberte, který typ závodu chcete absolvovat:<br /><br />
+			
+				<?php
+				switch($poradi_zavodu){
+					case 1:
+						require 'forms/odrivous_1.php';
+					break;
+					case 2:
+						require 'forms/odrivous_2.php';
+					break;
+				}
+	}
+
+
+	else{
+		require 'forms/default.php';
+	}
+?>
+</form>
+</fieldset>
+<div id="reklamy">
+    <div class="reklama">
+	<a class="nadpis" href="http://www.visalajka.cz">Oraz na Visalajích</a>
+	<p class="obsah">Horská chata Visalajka, celoroční ubytování v Beskydech za dobré peníze.</p>
+	<a class="link" href="http://www.visalajka.cz">www.visalajka.cz</a>
+    </div>
+    <div class="reklama">
+	<a class="nadpis" href="http://www.timechip.cz">TimeChip</a>
+	<p class="obsah">Zpracování výsledků závodů pomocí čipové technologie.</p>
+	<a class="link" href="http://www.timechip.cz">www.timechip.cz</a>
+    </div>
+</div>

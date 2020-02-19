@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="cs" dir="ltr">
+<head>
+    <title>Přihlášky</title>
+    <meta charset="UTF-8" />
+    <meta name="Description" content="" lang="cs" />
+    <script type="text/javascript" src="http://entry.timechip.loc/public/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="http://entry.timechip.loc/views/prihlaska/js/underscore.js"></script>
+     <script type="text/javascript" src="http://entry.timechip.loc/views/prihlaska/js/handlebars.js"></script>
+    <script type="text/javascript" src="http://entry.timechip.loc/views/prihlaska/js/backbone.js"></script>
+</head>
+<body>
+    <div id="divtest">
+	<button id="testik">Test</button>   
+    </div>
+    <div id="xx"></div>
+  
+
+    
+<script id="scripttest" type="text/x-handlebars-template">
+    <h1>{{search_label}}</h1>
+</script>
+
+<script>
+
+
+
+    Test = Backbone.View.extend({
+	el:'#divtest',
+	//template: _.template($("#scripttest").html()),
+	events: {
+	   "click #testik": "neco"
+       },
+       
+       neco: function(){
+	   this.render()
+       },
+       
+	template : Handlebars.compile( $("#scripttest").html()),
+	render: function(){
+	          //console.log(users.models);
+	     var variables = { search_label: "My Search" };
+	    //var template = _.template($("#scripttest").html(),variables);
+	  
+	    var neco = $("#xx");
+	    neco.html(this.template({ search_label: "KOKOKTE" } ));
+    }
+
+       
+   });
+   
+   var x = new Test();
+   
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>	

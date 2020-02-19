@@ -1,0 +1,40 @@
+$(function(){
+	
+	$('.zmena_udaju').submit(function(){
+		var url = $(this).attr('action');
+		var data = $(this).serialize();
+		//alert(url);
+		//alert(data);
+		
+		$.post(url,data,function(o){
+			//alert(o);
+			$('#content').html(o);
+			
+		},'html');
+		return false;
+	});
+	
+	//('#content #vypis_prihlasek tr').on('submit', '#zmena_udaju', function() {
+		
+	
+	//$('#content').on('submit','.zmena_udaju_1',function(){
+	
+	
+	$('#content').on('submit','.zmena_udaju_1',function(){	
+		var url = $(this).attr('action');
+		var data = $(this).serialize();
+		//alert(url);
+		//alert(data);
+		
+		$.post(url,data,function(o){
+			//alert(o);
+			$('#content').html(o);
+			
+		},'html');
+		return false;
+	
+		});
+	
+	
+	
+});

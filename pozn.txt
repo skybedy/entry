@@ -1,0 +1,13 @@
+prihlasky_2015
+prishlasky_startovne_2015
+
+
+kromě jména, narození a telefonů dát pryč _1,-2, atd
+dát input hidden s typem přihlášky
+
+
+
+vo modelu nastavit kategirie,startovne, mail
+
+
+přihlášky jednotlivci_2015 a přihlášky týmy_2015 a vs_2015 SE NESMÍ koprírovat z lokálu na server, protože se tím přepíšou aktuální data !!!!

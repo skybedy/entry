@@ -1,0 +1,737 @@
+<?php
+	
+	function Radkovani($i){
+		(fmod($i,2) == 0) ? ($radek = "sudy") : ($radek = "lichy");
+		return $radek;
+	}	 
+	$platba = Array("zaplaceno" => 'Zaplaceno',"nezaplaceno" => 'Nezaplaceno');
+	
+	$tricka = Array();
+   	$tricka['Bez trička'] = 'bez';
+	$tricka['S-pánské'] = 'S-male';
+   	$tricka['M-pánské'] = 'M-male';
+   	$tricka['L-pánské'] = 'L-male';
+   	$tricka['XL-pánské'] = 'XL-male';
+   	$tricka['XXL-pánské'] = 'XXL-male';
+   	$tricka['S-dámské'] = 'S-female';
+   	$tricka['M-dámské'] = 'M-female';
+   	$tricka['L-dámské'] = 'L-female';
+   	$tricka['XL-dámské'] = 'XL-female';
+   	$tricka['104-dětské'] = '104-child';
+   	$tricka['116-dětské'] = '116-child';
+   	$tricka['128-dětské'] = '128-child';
+   	$tricka['140-dětské'] = '140-child';
+   	$tricka['152-dětské'] = '152-child';
+   	$tricka['165-dětské'] = '165-child';
+	
+
+	if($this->VypisPrihlasek){
+		
+
+	if($this->IdZavodu == 3){//žilina
+		$platba = Array("uhrazeno" => 'Uhrazeno',"neuhrazeno" => 'Neuhrazeno');
+		$str = false;
+		$str1 = '<h3>Jednotlivci</h3>';
+		$str1 .= '<table class="vypis_prihlasek">';
+		$str1 .= '<tr class="hlavicka"><td>VS</td><td>Příjmení</td><td>Jméno</td><td>Tým/Bydliště</td><td class="align_center">Country</td><td class="align_center">Narození</td><td>E-mail</td><td>Telefon1</td><td>Telefon2</td><td>Kategorie</td>
+<td>Tričko</td><td>Noha</td><td class="align_center">Přihlášení</td><td style="width:10%">Vzkaz/Dotaz</td><td class="align_center">Platba</td><td class="align_center">€</td><td>Změna údajů</td></tr>';
+		$str2 = '<h3>2-členná družstva</h3>';
+		$str2 .= '<table class="vypis_prihlasek">';
+		$str2 .= '<tr class="hlavicka"><td>VS</td><td>Dužstvo</td><td>Country</td><td class="align_center">E-mail</td><td class="align_center">Telefon 1</td><td>Telefon 2</td><td class="align_center">Přihlášení</td><td>Kategorie</td>
+<td style="width:10%">Vzkaz/Dotaz</td><td colspan="2">Členové</td><td>Tým/Bydliště</td><td class="align_center">Narození</td><td class="align_center">Tričko</td><td class="align_center">Noha</td><td class="align_center">Platba</td><td class="align_center">€</td><td>Změna údajů</td></tr>';
+		$str3 = '<h3>4-členná družstva</h3>';
+		$str3 .= '<table class="vypis_prihlasek">';
+		$str3 .= '<tr class="hlavicka"><td>VS</td><td>Dužstvo</td><td>Country</td><td class="align_center">E-mail</td><td class="align_center">Telefon 1</td><td>Telefon 2</td><td class="align_center">Přihlášení</td><td>Kategorie</td>
+<td style="width:10%">Vzkaz/Dotaz</td><td colspan="2">Členové</td><td>Tým/Bydliště</td><td class="align_center">Narození</td><td class="align_center">Tričko</td><td class="align_center">Noha</td><td class="align_center">Platba</td><td class="align_center">€</td><td>Změna údajů</td></tr>';
+
+		$radek = 1;
+		foreach($this->VypisPrihlasek as $data){
+			if($data->poradi_podzavodu == 1){
+				$str1 .= '<tr class="lichy">';
+				$str1 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str1 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				//$str1 .= '<td class="align_center">'.$radek.'</td>';
+				$str1 .= '<td>'.$data->vs.'</td>';
+				$str1 .= '<td>'.$data->prijmeni_1.'</td>';
+				$str1 .= '<td>'.$data->jmeno_1.'</td>';
+				$str1 .= '<td>'.$data->prislusnost_1.'</td>';
+				$str1 .= '<td class="align_center">'.$data->stat.'</td>';
+				$str1 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str1 .= '<td>'.$data->mail.'</td>';
+				$str1 .= '<td>'.$data->telefon.'</td>';
+				$str1 .= '<td>'.$data->nahradni_telefon.'</td>';
+				$str1 .= '<td>'.$data->kategorie.'</td>';
+				$str1 .= '<td class="align_center">'.$data->velikost_tricka_1.'</td>';
+				$str1 .= '<td>'.$data->velikost_nohy_1.'</td>';
+				$str1 .= '<td>'.$data->datum_prihlaseni.'</td>';
+				$str1 .= '<td>'.$data->vzkaz.'</td>';
+				$str1 .= '<td>';
+				$str1 .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str1 .= '<option value="'.$key.'"';
+					$str1 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str1 .= ' >'.$data1.'</option>'; 
+				}
+				$str1 .= '</select>';
+				$str1 .= '</td>';
+			
+				$str1 .= '<td><input  class="align_center" size="3" name="startovne" value="'.$data->startovne.'" /></td>';
+				
+				$str1 .= '<td><input class="submit" type="submit" value="Změnit" /></td>';
+				
+				$str1 .= '</form>';
+				$str1 .= '</tr>';
+			}
+			elseif($data->poradi_podzavodu == 2){
+				$str2 .= '<tr class="lichy">';
+				$str2 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str2 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				$str2 .= '<td rowspan="2">'.$data->vs.'</td>';
+				$str2 .= '<td rowspan="2" class="align_left">'.$data->nazev_druzstva.'</td>';
+				$str2 .= '<td rowspan="2" class="align_center">'.$data->stat.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->mail.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->telefon.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->nahradni_telefon.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->datum_prihlaseni.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->kategorie.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->vzkaz.'</td>';
+				$str2 .= '<td>'.$data->prijmeni_1.'</td>';
+				$str2 .= '<td>'.$data->jmeno_1.'</td>';
+				$str2 .= '<td>'.$data->prislusnost_1.'</td>';
+				$str2 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str2 .= '<td class="align_center">'.$data->velikost_tricka_1.'</td>';
+				$str2 .= '<td>'.$data->velikost_nohy_1.'</td>';
+				$str2 .= '<td rowspan="2">';
+				$str2 .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str2 .= '<option value="'.$key.'"';
+					$str2 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str2 .= ' >'.$data1.'</option>'; 
+				}
+				$str2 .= '</select>';
+				$str2 .= '</td>';
+				$str2 .= '<td rowspan="2"><input  class="align_center" size="2" name="startovne" value="'.$data->startovne.'" /></td>';
+				
+				$str2 .= '<td rowspan="2"><input class="submit" type="submit" value="Změnit" /></td>';
+				$str2 .= '</tr>';
+				$str2 .= '<tr class="lichy">';
+				$str2 .= '<td>'.$data->prijmeni_2.'</td>';
+				$str2 .= '<td>'.$data->jmeno_2.'</td>';
+				$str2 .= '<td>'.$data->prislusnost_2.'</td>';
+				$str2 .= '<td class="align_center">'.$data->datum_narozeni_2.'</td>';
+				$str2 .= '<td class="align_center">'.$data->velikost_tricka_2.'</td>';
+				$str2 .= '<td>'.$data->velikost_nohy_2.'</td>';
+				$str2 .= '</tr>';
+				$str2 .= '</form>';
+			}
+			elseif($data->poradi_podzavodu == 3){
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str3 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				$str3 .= '<td rowspan="4">'.$data->vs.'</td>';
+				$str3 .= '<td rowspan="4" class="align_left">'.$data->nazev_druzstva.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->stat.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->mail.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->telefon.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->nahradni_telefon.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->datum_prihlaseni.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->kategorie.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->vzkaz.'</td>';
+				$str3 .= '<td>'.$data->prijmeni_1.'</td>';
+				$str3 .= '<td>'.$data->jmeno_1.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_1.'</td>';
+				$str3 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str3 .= '<td class="align_center">'.$data->velikost_tricka_1.'</td>';
+				$str3 .= '<td>'.$data->velikost_nohy_1.'</td>';
+				$str3 .= '<td rowspan="4">';
+				$str3 .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str3 .= '<option value="'.$key.'"';
+					$str3 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str3 .= ' >'.$data1.'</option>'; 
+				}
+				$str3 .= '</select>';
+				$str3 .= '</td>';
+				$str3 .= '<td rowspan="4"><input  class="align_center" size="2" name="startovne" value="'.$data->startovne.'" /></td>';
+				
+				$str3 .= '<td rowspan="4"><input class="submit" type="submit" value="Změnit" /></td>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<td>'.$data->prijmeni_2.'</td>';
+				$str3 .= '<td>'.$data->jmeno_2.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_2.'</td>';
+				$str3 .= '<td class="align_center">'.$data->datum_narozeni_2.'</td>';
+				$str3 .= '<td class="align_center">'.$data->velikost_tricka_2.'</td>';
+				$str3 .= '<td>'.$data->velikost_nohy_2.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<td>'.$data->prijmeni_3.'</td>';
+				$str3 .= '<td>'.$data->jmeno_3.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_3.'</td>';
+				$str3 .= '<td class="align_center">'.$data->datum_narozeni_3.'</td>';
+				$str3 .= '<td class="align_center">'.$data->velikost_tricka_3.'</td>';
+				$str3 .= '<td>'.$data->velikost_nohy_3.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<td>'.$data->prijmeni_4.'</td>';
+				$str3 .= '<td>'.$data->jmeno_4.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_4.'</td>';
+				$str3 .= '<td class="align_center">'.$data->datum_narozeni_4.'</td>';
+				$str3 .= '<td class="align_center">'.$data->velikost_tricka_4.'</td>';
+				$str3 .= '<td>'.$data->velikost_nohy_4.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '</form>';
+			}
+
+			
+		}
+			
+		$radek++;
+			
+		$str1 .= '</table>';
+		$str2 .= '</table>';
+		$str .= $str1;
+		$str .= '<br />';
+		$str .= $str2;
+		$str .= '<br />';
+		$str .= $str3;
+		echo $str;
+	}
+	elseif($this->IdZavodu == 2 OR $this->IdZavodu == 11 OR $this->IdZavodu == 42){
+		$platba = Array("uhrazeno" => 'Uhrazeno',"neuhrazeno" => 'Neuhrazeno');
+		$str = false;
+		$str1 = '<h3>Jednotlivci</h3>';
+		$str1 .= '<table class="vypis_prihlasek">';
+		$str1 .= '<tr class="hlavicka"><td>VS</td><td>Příjmení</td><td>Jméno</td><td>Tým/Bydliště</td><td class="align_center">Country</td><td class="align_center">Narození</td><td>E-mail</td><td>Telefon1</td><td>Telefon2</td><td>Kategorie</td>
+<td>Tričko</td><td>Noha</td><td class="align_center">Přihlášení</td><td style="width:10%">Vzkaz/Dotaz</td><td class="align_center">Platba</td><td class="align_center">€</td><td>Změna údajů</td></tr>';
+		$str2 = '<h3>2-členná družstva</h3>';
+		$str2 .= '<table class="vypis_prihlasek">';
+		$str2 .= '<tr class="hlavicka"><td>VS</td><td>Dužstvo</td><td>Country</td><td class="align_center">E-mail</td><td class="align_center">Telefon 1</td><td>Telefon 2</td><td class="align_center">Přihlášení</td><td>Kategorie</td>
+<td style="width:10%">Vzkaz/Dotaz</td><td colspan="2">Členové</td><td>Tým/Bydliště</td><td class="align_center">Narození</td><td class="align_center">Tričko</td><td class="align_center">Noha</td><td class="align_center">Platba</td><td class="align_center">€</td><td>Změna údajů</td></tr>';
+		$str3 = '<h3>4-členná družstva</h3>';
+		$str3 .= '<table class="vypis_prihlasek">';
+		$str3 .= '<tr class="hlavicka"><td>VS</td><td>Dužstvo</td><td>Country</td><td class="align_center">E-mail</td><td class="align_center">Telefon 1</td><td>Telefon 2</td><td class="align_center">Přihlášení</td><td>Kategorie</td>
+<td style="width:10%">Vzkaz/Dotaz</td><td colspan="2">Členové</td><td>Tým/Bydliště</td><td class="align_center">Narození</td><td class="align_center">Tričko</td><td class="align_center">Noha</td><td class="align_center">Platba</td><td class="align_center">€</td><td>Změna údajů</td></tr>';
+
+		$radek = 1;
+		foreach($this->VypisPrihlasek as $data){
+			if($data->poradi_podzavodu == 1){
+				$str1 .= '<tr class="lichy">';
+				$str1 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str1 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				//$str1 .= '<td class="align_center">'.$radek.'</td>';
+				$str1 .= '<td>'.$data->vs.'</td>';
+				$str1 .= '<td>'.$data->prijmeni_1.'</td>';
+				$str1 .= '<td>'.$data->jmeno_1.'</td>';
+				$str1 .= '<td>'.$data->prislusnost_1.'</td>';
+				$str1 .= '<td class="align_center">'.$data->stat.'</td>';
+				$str1 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str1 .= '<td>'.$data->mail.'</td>';
+				$str1 .= '<td>'.$data->telefon.'</td>';
+				$str1 .= '<td>'.$data->nahradni_telefon.'</td>';
+				$str1 .= '<td>'.$data->kategorie.'</td>';
+				$str1 .= '<td class="align_center">'.$data->velikost_tricka_1.'</td>';
+				$str1 .= '<td>'.$data->velikost_nohy_1.'</td>';
+				$str1 .= '<td>'.$data->datum_prihlaseni.'</td>';
+				$str1 .= '<td>'.$data->vzkaz.'</td>';
+				$str1 .= '<td>';
+				$str1 .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str1 .= '<option value="'.$key.'"';
+					$str1 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str1 .= ' >'.$data1.'</option>'; 
+				}
+				$str1 .= '</select>';
+				$str1 .= '</td>';
+			
+				$str1 .= '<td><input  class="align_center" size="3" name="startovne" value="'.$data->startovne.'" /></td>';
+				
+				$str1 .= '<td><input class="submit" type="submit" value="Změnit" /></td>';
+				
+				$str1 .= '</form>';
+				$str1 .= '</tr>';
+			}
+			elseif($data->poradi_podzavodu == 2){
+				$str2 .= '<tr class="lichy">';
+				$str2 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str2 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				$str2 .= '<td rowspan="2">'.$data->vs.'</td>';
+				$str2 .= '<td rowspan="2" class="align_left">'.$data->nazev_druzstva.'</td>';
+				$str2 .= '<td rowspan="2" class="align_center">'.$data->stat.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->mail.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->telefon.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->nahradni_telefon.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->datum_prihlaseni.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->kategorie.'</td>';
+				$str2 .= '<td rowspan="2">'.$data->vzkaz.'</td>';
+				$str2 .= '<td>'.$data->prijmeni_1.'</td>';
+				$str2 .= '<td>'.$data->jmeno_1.'</td>';
+				$str2 .= '<td>'.$data->prislusnost_1.'</td>';
+				$str2 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str2 .= '<td class="align_center">'.$data->velikost_tricka_1.'</td>';
+				$str2 .= '<td>'.$data->velikost_nohy_1.'</td>';
+				$str2 .= '<td rowspan="2">';
+				$str2 .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str2 .= '<option value="'.$key.'"';
+					$str2 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str2 .= ' >'.$data1.'</option>'; 
+				}
+				$str2 .= '</select>';
+				$str2 .= '</td>';
+				$str2 .= '<td rowspan="2"><input  class="align_center" size="2" name="startovne" value="'.$data->startovne.'" /></td>';
+				
+				$str2 .= '<td rowspan="2"><input class="submit" type="submit" value="Změnit" /></td>';
+				$str2 .= '</tr>';
+				$str2 .= '<tr class="lichy">';
+				$str2 .= '<td>'.$data->prijmeni_2.'</td>';
+				$str2 .= '<td>'.$data->jmeno_2.'</td>';
+				$str2 .= '<td>'.$data->prislusnost_2.'</td>';
+				$str2 .= '<td class="align_center">'.$data->datum_narozeni_2.'</td>';
+				$str2 .= '<td class="align_center">'.$data->velikost_tricka_2.'</td>';
+				$str2 .= '<td>'.$data->velikost_nohy_2.'</td>';
+				$str2 .= '</tr>';
+				$str2 .= '</form>';
+			}
+			elseif($data->poradi_podzavodu == 3){
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str3 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				$str3 .= '<td rowspan="4">'.$data->vs.'</td>';
+				$str3 .= '<td rowspan="4" class="align_left">'.$data->nazev_druzstva.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->stat.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->mail.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->telefon.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->nahradni_telefon.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->datum_prihlaseni.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->kategorie.'</td>';
+				$str3 .= '<td rowspan="4">'.$data->vzkaz.'</td>';
+				$str3 .= '<td>'.$data->prijmeni_1.'</td>';
+				$str3 .= '<td>'.$data->jmeno_1.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_1.'</td>';
+				$str3 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str3 .= '<td class="align_center">'.$data->velikost_tricka_1.'</td>';
+				$str3 .= '<td>'.$data->velikost_nohy_1.'</td>';
+				$str3 .= '<td rowspan="4">';
+				$str3 .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str3 .= '<option value="'.$key.'"';
+					$str3 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str3 .= ' >'.$data1.'</option>'; 
+				}
+				$str3 .= '</select>';
+				$str3 .= '</td>';
+				$str3 .= '<td rowspan="4"><input  class="align_center" size="2" name="startovne" value="'.$data->startovne.'" /></td>';
+				
+				$str3 .= '<td rowspan="4"><input class="submit" type="submit" value="Změnit" /></td>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<td>'.$data->prijmeni_2.'</td>';
+				$str3 .= '<td>'.$data->jmeno_2.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_2.'</td>';
+				$str3 .= '<td class="align_center">'.$data->datum_narozeni_2.'</td>';
+				$str3 .= '<td class="align_center">'.$data->velikost_tricka_2.'</td>';
+				$str3 .= '<td>'.$data->velikost_nohy_2.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<td>'.$data->prijmeni_3.'</td>';
+				$str3 .= '<td>'.$data->jmeno_3.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_3.'</td>';
+				$str3 .= '<td class="align_center">'.$data->datum_narozeni_3.'</td>';
+				$str3 .= '<td class="align_center">'.$data->velikost_tricka_3.'</td>';
+				$str3 .= '<td>'.$data->velikost_nohy_3.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<td>'.$data->prijmeni_4.'</td>';
+				$str3 .= '<td>'.$data->jmeno_4.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_4.'</td>';
+				$str3 .= '<td class="align_center">'.$data->datum_narozeni_4.'</td>';
+				$str3 .= '<td class="align_center">'.$data->velikost_tricka_4.'</td>';
+				$str3 .= '<td>'.$data->velikost_nohy_4.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '</form>';
+			}
+			
+		}
+			
+		$radek++;
+			
+		$str1 .= '</table>';
+		$str2 .= '</table>';
+		$str3 .= '</table>';
+		$str .= $str1;
+		$str .= '<br />';
+		$str .= $str2;
+		$str .= '<br /><br />';
+		$str .= $str3;
+		
+		echo $str;
+	}
+
+		
+		elseif($this->IdZavodu == 5 || $this->IdZavodu == 25){//valachiarun valmez,bělský okruh 
+			echo  '<table class="vypis_prihlasek">';
+			echo '<tr class="hlavicka">';
+			echo  '<td class="align_center">#</td><td>VS</td><td>Příjmení</td><td>Jméno</td><td>Tým/Bydliště</td><td class="align_center">Country</td><td class="align_center">Narození</td><td>E-mail</td><td>Telefon1</td><td>Telefon2</td><td>Kategorie</td>
+					<td>Přihlášení</td><td style="width:10%">Vzkaz/Dotaz</td><td>Tričko</td><td class="align_center">Startovné</td><td class="align_center">Platba</td><td>Změna údajů</td>';
+			echo '</tr>';
+				$i = 1;	
+				foreach($this->VypisPrihlasek as $data){
+					$str = false;
+					$str .= '<tr class="lichy">';
+					$str .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+					$str .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+					//$str1 .= '<td class="align_center">'.$radek.'</td>';
+					$str .= '<td>'.$i.'</td>';
+					$str .= '<td>'.$data->vs.'</td>';
+					$str .= '<td>'.$data->prijmeni_1.'</td>';
+					$str .= '<td>'.$data->jmeno_1.'</td>';
+					$str .= '<td>'.$data->prislusnost_1.'</td>';
+					$str .= '<td class="align_center">'.$data->stat.'</td>';
+					$str .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+					$str .= '<td>'.$data->mail.'</td>';
+					$str .= '<td>'.$data->telefon_1.'</td>';
+					$str .= '<td>'.$data->telefon_2.'</td>';
+					$str .= '<td>'.$data->kategorie.'</td>';
+					$str .= '<td>'.$data->datum_prihlaseni.'</td>';
+					$str .= '<td>'.$data->vzkaz.'</td>';
+					$str .= '<td>'.$data->tricko_1.'</td>';
+					$str .= '<td class="align_center">'.$data->startovne.'</td>';
+					$str .= '<td>';
+					$str .= '<select name="platba">';
+					foreach($platba as $key => $data1){
+						$str .= '<option value="'.$key.'"';
+						$str .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+						$str .= ' >'.$data1.'</option>'; 
+					}
+					$str .= '</select>';
+					$str .= '</td>';
+					$str .= '<td><input class="submit" type="submit" value="Změnit" /></td>';
+					$str .= '</form>';
+					$str .= '</tr>';
+					echo $str;
+					$i++;
+				}
+				echo '</table>';
+				
+				if($this->IdZavodu == 25){
+				    echo '<br /><h2>SKP</h2>';
+				    echo  '<table class="vypis_prihlasek">';
+				    echo '<tr class="hlavicka">';
+				    echo  '<td class="align_center">#</td><td>VS</td><td>Příjmení</td><td>Jméno</td><td>Tým/Bydliště</td><td class="align_center">Country</td><td class="align_center">Narození</td><td>E-mail</td><td>Telefon1</td><td>Telefon2</td><td>Kategorie</td>
+						    <td>Přihlášení</td><td style="width:10%">Vzkaz/Dotaz</td><td>Tričko</td><td class="align_center">Startovné</td><td class="align_center">Platba</td><td>Změna údajů</td>';
+				    echo '</tr>';
+					    $i = 1;	
+					    foreach($this->VypisPrihlasek as $data){
+						if($data->kategorie_2 == 'SKP'){
+						    $str = false;
+						    $str .= '<tr class="lichy">';
+						    $str .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+						    $str .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+						    //$str1 .= '<td class="align_center">'.$radek.'</td>';
+						    $str .= '<td>'.$i.'</td>';
+						    $str .= '<td>'.$data->vs.'</td>';
+						    $str .= '<td>'.$data->prijmeni_1.'</td>';
+						    $str .= '<td>'.$data->jmeno_1.'</td>';
+						    $str .= '<td>'.$data->prislusnost_1.'</td>';
+						    $str .= '<td class="align_center">'.$data->stat.'</td>';
+						    $str .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+						    $str .= '<td>'.$data->mail.'</td>';
+						    $str .= '<td>'.$data->telefon_1.'</td>';
+						    $str .= '<td>'.$data->telefon_2.'</td>';
+						    $str .= '<td>'.$data->kategorie.'</td>';
+						    $str .= '<td>'.$data->datum_prihlaseni.'</td>';
+						    $str .= '<td>'.$data->vzkaz.'</td>';
+						    $str .= '<td>'.$data->tricko_1.'</td>';
+						    $str .= '<td class="align_center">'.$data->startovne.'</td>';
+						    $str .= '<td>';
+						    $str .= '<select name="platba">';
+						    foreach($platba as $key => $data1){
+							    $str .= '<option value="'.$key.'"';
+							    $str .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+							    $str .= ' >'.$data1.'</option>'; 
+						    }
+						    $str .= '</select>';
+						    $str .= '</td>';
+						    $str .= '<td><input class="submit" type="submit" value="Změnit" /></td>';
+						    $str .= '</form>';
+						    $str .= '</tr>';
+						    echo $str;
+						    $i++;
+					    }
+					}
+				echo '</table>';
+				}
+				
+				
+		}
+
+		elseif($this->IdZavodu == 26){//valachiarun vsetín 
+		    $str = false;
+		    $str1 = '<h3>Jednotlivci</h3>';
+		    $str1 .= '<table class="vypis_prihlasek">';
+		    $str1 .= '<tr class="hlavicka"><td>VS</td><td>Příjmení</td><td>Jméno</td><td>Tým/Bydliště</td><td class="align_center">Country</td><td class="align_center">Narození</td><td>E-mail</td><td>Telefon1</td><td>Telefon2</td><td>Kategorie</td><td>Tričko</td><td class="align_center">Přihlášení</td><td style="width:10%">Vzkaz/Dotaz</td><td>Tričko</td><td class="align_center">Platba</td><td class="align_center">Startovné</td><td>Změna údajů</td></tr>';
+		    $str2 = '<h3>2-členná družstva</h3>';
+		    $str2 .= '<table class="vypis_prihlasek">';
+		    $str2 .= '<tr class="hlavicka"><td>VS</td><td>Dužstvo</td><td>Country</td><td class="align_center">E-mail</td><td class="align_center">Telefon 1</td><td>Telefon 2</td><td class="align_center">Přihlášení</td><td>Kategorie</td><td style="width:10%">Vzkaz/Dotaz</td><td colspan="2">Členové</td><td>Tým/Bydliště</td><td class="align_center">Narození</td><td class="align_center">Tričko</td><td class="align_center">Platba</td><td class="align_center">Startovné</td><td>Změna údajů</td></tr>';
+		    $str3 = '<br /><h3>Rodinný běh</h3>';
+		    $str3 .= '<table class="vypis_prihlasek">';
+		    $str4 = '<br /><h3>Mini</h3>';
+		    $str4 .= '<table class="vypis_prihlasek">';
+		    
+
+		    $i = 1;	
+			foreach($this->VypisPrihlasek as $data){
+			    if($data->poradi_podzavodu == 1 || $data->poradi_podzavodu == 3 || $data->poradi_podzavodu == 4 || $data->poradi_podzavodu == 5){
+				$str1 .= '<tr class="lichy">';
+				$str1 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str1 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				//$str1 .= '<td class="align_center">'.$radek.'</td>';
+				$str1 .= '<td>'.$i.'</td>';
+				$str1 .= '<td>'.$data->vs.'</td>';
+				$str1 .= '<td>'.$data->prijmeni_1.'</td>';
+				$str1 .= '<td>'.$data->jmeno_1.'</td>';
+				$str1 .= '<td>'.$data->prislusnost_1.'</td>';
+				$str1 .= '<td class="align_center">'.$data->stat.'</td>';
+				$str1 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str1 .= '<td>'.$data->mail.'</td>';
+				$str1 .= '<td>'.$data->telefon_1.'</td>';
+				$str1 .= '<td>'.$data->telefon_2.'</td>';
+				$str1 .= '<td>'.$data->kategorie.'</td>';
+				$str1 .= '<td>'.$data->datum_prihlaseni.'</td>';
+				$str1 .= '<td>'.$data->vzkaz.'</td>';
+				$str1 .= '<td>'.$data->tricko_1.'</td>';
+				$str1 .= '<td class="align_center">'.$data->startovne.'</td>';
+				$str1 .= '<td>';
+				$str1 .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str1 .= '<option value="'.$key.'"';
+					$str1 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str1 .= ' >'.$data1.'</option>'; 
+				}
+				$str1 .= '</select>';
+				$str1 .= '</td>';
+				$str1 .= '<td><input class="submit" type="submit" value="Změnit" /></td>';
+				$str1 .= '</form>';
+				$str1 .= '</tr>';
+
+				$i++;
+			}
+			    if($data->poradi_podzavodu == 1 || $data->poradi_podzavodu == 3 || $data->poradi_podzavodu == 4 || $data->poradi_podzavodu == 5){
+				$str1 .= '<tr class="lichy">';
+				$str1 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str1 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				//$str1 .= '<td class="align_center">'.$radek.'</td>';
+				$str1 .= '<td>'.$i.'</td>';
+				$str1 .= '<td>'.$data->vs.'</td>';
+				$str1 .= '<td>'.$data->prijmeni_1.'</td>';
+				$str1 .= '<td>'.$data->jmeno_1.'</td>';
+				$str1 .= '<td>'.$data->prislusnost_1.'</td>';
+				$str1 .= '<td class="align_center">'.$data->stat.'</td>';
+				$str1 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str1 .= '<td>'.$data->mail.'</td>';
+				$str1 .= '<td>'.$data->telefon_1.'</td>';
+				$str1 .= '<td>'.$data->telefon_2.'</td>';
+				$str1 .= '<td>'.$data->kategorie.'</td>';
+				$str1 .= '<td>'.$data->datum_prihlaseni.'</td>';
+				$str1 .= '<td>'.$data->vzkaz.'</td>';
+				$str1 .= '<td>'.$data->tricko_1.'</td>';
+				$str1 .= '<td class="align_center">'.$data->startovne.'</td>';
+				$str1 .= '<td>';
+				$str1 .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str1 .= '<option value="'.$key.'"';
+					$str1 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str1 .= ' >'.$data1.'</option>'; 
+				}
+				$str1 .= '</select>';
+				$str1 .= '</td>';
+				$str1 .= '<td><input class="submit" type="submit" value="Změnit" /></td>';
+				$str1 .= '</form>';
+				$str1 .= '</tr>';
+
+				$i++;
+			}
+			elseif($data->poradi_podzavodu == 6){
+			    $str4 .= '<tr class="lichy">';
+			    $str4 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+			    $str4 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+			    $str4 .= '<td rowspan="2">'.$data->vs.'</td>';
+			    $str4 .= '<td rowspan="2" class="align_left">'.$data->nazev_druzstva.'</td>';
+			    $str4 .= '<td rowspan="2" class="align_center">'.$data->stat.'</td>';
+			    $str4 .= '<td rowspan="2">'.$data->mail.'</td>';
+			    $str4 .= '<td rowspan="2">'.$data->telefon_1.'</td>';
+			    $str4 .= '<td rowspan="2">'.$data->telefon_2.'</td>';
+			    $str4 .= '<td rowspan="2">'.$data->datum_prihlaseni.'</td>';
+			    $str4 .= '<td rowspan="2">'.$data->kategorie.'</td>';
+			    $str4 .= '<td rowspan="2">'.$data->vzkaz.'</td>';
+			    $str4 .= '<td>'.$data->prijmeni_1.'</td>';
+			    $str4 .= '<td>'.$data->jmeno_1.'</td>';
+			    $str4 .= '<td>'.$data->prislusnost_1.'</td>';
+			    $str4 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+			    $str4 .= '<td class="align_center">'.$data->tricko_1.'</td>';
+			    $str4 .= '<td rowspan="2">';
+			    $str4 .= '<select name="platba">';
+			    foreach($platba as $key => $data1){
+				$str4 .= '<option value="'.$key.'"';
+				$str4 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+				$str4 .= ' >'.$data1.'</option>'; 
+			    }
+			    $str4 .= '</select>';
+			    $str4 .= '</td>';
+			    $str4 .= '<td rowspan="2"><input  class="align_center" size="2" name="startovne" value="'.$data->startovne.'" /></td>';
+			    $str4 .= '<td rowspan="2"><input class="submit" type="submit" value="Změnit" /></td>';
+			    $str4 .= '</tr>';
+			    $str4 .= '<tr class="lichy">';
+			    $str4 .= '<td>'.$data->prijmeni_2.'</td>';
+			    $str4 .= '<td>'.$data->jmeno_2.'</td>';
+			    $str4 .= '<td>'.$data->prislusnost_2.'</td>';
+			    $str4 .= '<td class="align_center">'.$data->datum_narozeni_2.'</td>';
+			    $str4 .= '<td class="align_center">'.$data->tricko_2.'</td>';
+			    $str4 .= '</tr>';
+			    $str4 .= '</form>';
+			}
+			
+			elseif($data->poradi_podzavodu == 7){
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str3 .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				$str3 .= '<td rowspan="6">'.$data->vs.'</td>';
+				$str3 .= '<td rowspan="6">'.$data->stat.'</td>';
+				$str3 .= '<td rowspan="6">'.$data->mail.'</td>';
+				$str3 .= '<td rowspan="6">'.$data->telefon_1.'</td>';
+				$str3 .= '<td rowspan="6">'.$data->datum_prihlaseni.'</td>';
+				$str3 .= '<td rowspan="6">'.$data->kategorie.'</td>';
+				$str3 .= '<td rowspan="6">'.$data->vzkaz.'</td>';
+				$str3 .= '<td>'.$data->prijmeni_1.'</td>';
+				$str3 .= '<td>'.$data->jmeno_1.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_1.'</td>';
+				$str3 .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str3 .= '<td class="align_center">'.$data->tricko_1.'</td>';
+				$str3 .= '<td rowspan="6">';
+				$str3 .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str3 .= '<option value="'.$key.'"';
+					$str3 .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str3 .= ' >'.$data1.'</option>'; 
+				}
+				$str3 .= '</select>';
+				$str3 .= '</td>';
+				$str3 .= '<td rowspan="6"><input  class="align_center" size="2" name="startovne" value="'.$data->startovne.'" /></td>';
+				
+				$str3 .= '<td rowspan="6"><input class="submit" type="submit" value="Změnit" /></td>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="sudy">';
+				$str3 .= '<td>'.$data->prijmeni_2.'</td>';
+				$str3 .= '<td>'.$data->jmeno_2.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_2.'</td>';
+				$str3 .= ($data->datum_narozeni_2 == '0000-00-00') ? ('<td class="align_center">&nbsp;</td>') : ('<td class="align_center">'.$data->datum_narozeni_2.'</td>');
+				$str3 .= '<td class="align_center">'.$data->tricko_2.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<td>'.$data->prijmeni_3.'</td>';
+				$str3 .= '<td>'.$data->jmeno_3.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_3.'</td>';
+				$str3 .= ($data->datum_narozeni_3 == '0000-00-00') ? ('<td class="align_center">&nbsp;</td>') : ('<td class="align_center">'.$data->datum_narozeni_3.'</td>');
+				$str3 .= '<td class="align_center">'.$data->tricko_3.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="sudy">';
+				$str3 .= '<td>'.$data->prijmeni_4.'</td>';
+				$str3 .= '<td>'.$data->jmeno_4.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_4.'</td>';
+				$str3 .= ($data->datum_narozeni_4 == '0000-00-00') ? ('<td class="align_center">&nbsp;</td>') : ('<td class="align_center">'.$data->datum_narozeni_4.'</td>');
+				$str3 .= '<td class="align_center">'.$data->tricko_4.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="lichy">';
+				$str3 .= '<td>'.$data->prijmeni_5.'</td>';
+				$str3 .= '<td>'.$data->jmeno_5.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_5.'</td>';
+				$str3 .= ($data->datum_narozeni_5 == '0000-00-00') ? ('<td class="align_center">&nbsp;</td>') : ('<td class="align_center">'.$data->datum_narozeni_5.'</td>');
+				$str3 .= '<td class="align_center">'.$data->tricko_5.'</td>';
+				$str3 .= '</tr>';
+				$str3 .= '<tr class="sudy">';
+				$str3 .= '<td>'.$data->prijmeni_6.'</td>';
+				$str3 .= '<td>'.$data->jmeno_6.'</td>';
+				$str3 .= '<td>'.$data->prislusnost_6.'</td>';
+				$str3 .= ($data->datum_narozeni_6 == '0000-00-00') ? ('<td class="align_center">&nbsp;</td>') : ('<td class="align_center">'.$data->datum_narozeni_6.'</td>');
+				$str3 .= '<td class="align_center">'.$data->tricko_6.'</td>';
+				$str3 .= '</tr>';
+
+				$str3 .= '</form>';
+			}
+			
+			
+			
+		    }
+		    $str1 .= '</table>';
+		    $str2 .= '</table>';
+		    $str3 .= '</table>';
+		    $str4 .= '</table>';
+		    $str .= $str1;
+		    $str .= '<br />';
+		    $str .= $str2;
+		    $str .= $str3;
+		    $str .= $str4;
+		    echo $str;
+		}
+		
+		
+		
+		
+		
+		
+		
+		else{
+		echo  '<table class="vypis_prihlasek">';
+		echo '<tr class="hlavicka">';
+		echo  '<td class="align_center">#</td><td>VS</td><td>Příjmení</td><td>Jméno</td><td>Tým/Bydliště</td><td class="align_center">Country</td><td class="align_center">Narození</td><td>E-mail</td><td>Telefon1</td><td>Telefon2</td><td>Kategorie</td><td class="align_center">Tričko</td>
+				<td>Přihlášení</td><td style="width:10%">Vzkaz/Dotaz</td><td class="align_center">Startovné</td><td class="align_center">Platba</td><td>Změna údajů</td>';
+		echo '</tr>';
+			$i = 1;	
+			foreach($this->VypisPrihlasek as $data){
+				$str = false;
+				$str .= '<tr class="lichy">';
+				$str .= '<form id="zmena_udaju" action="'.URL.'administrace/zmena_udaju/" method="post">';
+				$str .= '<input type="hidden" name="id" value="'.$data->id.'" />';
+				//$str1 .= '<td class="align_center">'.$radek.'</td>';
+				$str .= '<td>'.$i.'</td>';
+				$str .= '<td>'.$data->vs.'</td>';
+				$str .= '<td>'.$data->prijmeni_1.'</td>';
+				$str .= '<td>'.$data->jmeno_1.'</td>';
+				$str .= '<td>'.$data->prislusnost_1.'</td>';
+				$str .= '<td class="align_center">'.$data->stat.'</td>';
+				$str .= '<td class="align_center">'.$data->datum_narozeni_1.'</td>';
+				$str .= '<td>'.$data->mail.'</td>';
+				$str .= '<td>'.$data->telefon_1.'</td>';
+				$str .= '<td>'.$data->telefon_2.'</td>';
+				$str .= '<td>'.$data->kategorie.'</td>';
+				$str .= '<td class="align_center">'.$data->tricko_1.'</td>';
+				$str .= '<td class="align_center">'.$data->datum_prihlaseni.'</td>';
+				$str .= '<td>'.$data->vzkaz.'</td>';
+				$str .= '<td class="align_center">'.$data->startovne.'</td>';
+				$str .= '<td>';
+				$str .= '<select name="platba">';
+				foreach($platba as $key => $data1){
+					$str .= '<option value="'.$key.'"';
+					$str .= ($key == $data->zaplaceno) ? (' selected="selected"') : ('');
+					$str .= ' >'.$data1.'</option>'; 
+				}
+				$str .= '</select>';
+				$str .= '</td>';
+				$str .= '<td><input class="submit" type="submit" value="Změnit" /></td>';
+				$str .= '</form>';
+				$str .= '</tr>';
+				echo $str;
+				$i++;
+			}
+			echo '</table>';
+		}
+	}
+?>
+<div id="listInserts"></div>

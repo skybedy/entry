@@ -1,0 +1,108 @@
+<?php
+
+	require_once dirname(__FILE__).'/../Class/Action/Core.php';
+
+	final class Core_Nominace extends Class_Action_Core
+	{
+			protected $_data = NULL;
+			protected $kategorie = NULL;
+			
+			public function loadKategorie()
+			{
+				$kategorie = Array();
+				
+				$result = dibi::query('select id,ident from kategorie');
+
+				if (count($result)>0)
+				{
+					foreach($result as $val)
+					{
+						$kategorie[$val->id] = $val->ident;
+					}
+				}
+				
+				return $kategorie;
+			}
+			
+			public function getData()
+			{
+				if ($this->_data === NULL)
+				{
+					$url = 'http://www.countrycross.cz/main.php?page=list_start';
+					
+					$data = file_get_contents($url);
+					
+					if (preg_match_all('/<tr>\s*<td>([0-9]+)<\/td>\s*<td>([^<]+)<\/td>\s*<td>([^<]+)<\/td>'.
+									'\s*<td>([0-9]{4})<\/td>\s*<td>([^<]*)<\/td>\s*<td>([^<]*)<\/td>\s*<td>([^<]*)<\/td>\s*<td>([^<]+)<\/td>\s+<\/tr>/is',$data,$regs,PREG_SET_ORDER))
+					{
+						$this->_data = $regs;
+					}
+					else
+						$this->_data = false;
+					
+				}
+				return ($this->_data);
+			}
+
+
+			/*
+			
+            [1] => 1
+            [2] => Patrycja 
+            [3] => Komko
+            [4] => 1982
+            [5] => MCR I ZENY
+            [6] => FIM A
+            [7] => 
+            [8] => GAS GAS 125 R
+
+			*/			
+
+			public function saveNominace()
+			{
+				$data = $this->getData();
+				
+				if (is_array($data))
+				{
+					foreach($data as $val)
+					{
+						$id = dibi::query('select id from zavodnici where startcis=%i',$val[1])->fetchSingle();
+						
+						if ($val[5] == 'MCR II VET 40')
+							$val[5] = 'MCR I VET OPEN';
+						
+						$kategorie = array_search($val[5], $this->kategorie);
+						
+						if ($kategorie!==false)
+						{
+							if (!$id)
+							{
+								$zavodnik = Array(
+									'startcis' 	=> $val[1],
+									'jmeno'		=> $val[2],
+									'prijmeni'	=> $val[3],
+									'nazevtymu'	=> html_entity_decode($val[7]),
+									'kategorie_id' => $kategorie
+								);
+								dibi::query('insert into zavodnici',$zavodnik);
+							}
+							else
+							{
+								dibi::query('update zavodnici set nazevtymu=%s',html_entity_decode($val[7]),'where id=%i',$id);
+							}
+						}
+					}
+				}
+			}
+			
+            public function actionDownload()
+            {
+				$this->kategorie = $this->loadKategorie();
+				$this->saveNominace();
+				die();
+            }
+            
+            
+	}
+	
+	
