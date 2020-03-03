@@ -28,6 +28,10 @@ class Auth{
 			$log = '24mtbbikejam';
 			$pas = 'e2PfFVTEzjnZavYNkF2u';
                     break;
+                    case 6:
+			$log = 'nachodska24';
+			$pas = 'Vwk9Pw7q6XB9';
+                    break;
                     case 9:
 			$log = 'beskydsky_biatlon';
 			$pas = 'e2PfFVLkiwzjnZKwuiF2u';
@@ -44,9 +48,13 @@ class Auth{
                         $log = 'novojicinsky_pulmaraton';
                         $pas = 'lKfTVgiKRSKf3TludMr1';
                     break;	
-                    case 100: // zatopek
+                    case 15: // zatopek
                         $log = 'brkez';
                         $pas = '54qwTweLoeO3Q4';
+                    break;
+                    case 18: // vankac
+                        $log = 'vankac_race';
+                        $pas = '32MqwweLqJ3Q4';
                     break;
 
                 }

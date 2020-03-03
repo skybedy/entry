@@ -192,11 +192,12 @@
 <?php
     $str = '<div class="container-fluid">';
     $str .= '<h5>Ke každému závodníkoví je možno přidat si vlastní poznámku v editaci jeho údajů</h5><hr>';
-    $str .= '<h5 style="color:red">Moji milí pořadatelé, na žádost některých urputných pochtívačů :-) jsem dopsal funkci, která pošle mail přihlášenému v okamžiku, kdy mu ve "Změně údajů" dáte status "Zaplaceno" a dáte "Uložit změny".<br>Funkce to udělá pouze jednou, takže se nemusíte bát, že při případné další změně, třeba jména, to bude posílat mail znovu.<br>'
+  /*  $str .= '<h5 style="color:red">Moji milí pořadatelé, na žádost některých urputných pochtívačů :-) jsem dopsal funkci, která pošle mail přihlášenému v okamžiku, kdy mu ve "Změně údajů" dáte status "Zaplaceno" a dáte "Uložit změny".<br>Funkce to udělá pouze jednou, takže se nemusíte bát, že při případné další změně, třeba jména, to bude posílat mail znovu.<br>'
             . 'Bacha, nefunguje to obráceně, pokud někomu dáte omylem "Zaplaceno" a pak mu vrátíte "Nezaplaceno", žádný mail o omylu závodníkovi nepřijde, to si už musíte pořešit sami<br>'
             . 'V téhle chvíli už jsem dost utahaný, takže dotyčnému přijde prostinký text "<span style="text-decoration:underline">Potvrzujeme zaplacení startovneho ve výši xxx Kč.Děkujeme a těšíme se na vaši účast.</span>", takže mě klidně můžete inspirovat svými nápady o jiném textu.<br>'
             . 'Zatím to funguje jen u jednotlivců, týmy zas někdy příště, i tak jsem tomu věnoval půlden života.<br>'
-            . 'Pokud by jste narazili na nějaký problém, budu vám vděčný za jakékoliv info, génius byl Einstein, nikoli já.<br> 31.1.19,  mk. </h5>';
+            . 'Pokud by jste narazili na nějaký problém, budu vám vděčný za jakékoliv info, génius byl Einstein, nikoli já.<br> 31.1.19,  mk. </h5>'; */
+    
     if($this->VypisPrihlasek['jednotlivci']){
 	$pocet_prihlasek = count($this->VypisPrihlasek['jednotlivci']);
 	$str .=  '<table class="table table-bordered table-striped table-hover zmena_udaju">';

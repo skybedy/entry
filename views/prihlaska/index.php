@@ -399,6 +399,9 @@
                                     case 12: //NJ pulmaraton
                                             echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://www.aktivitytour.cz/registrace-novojicinsky-pulmaraton">ZDE.</a></p>';
                                     break;
+                                    case 18: // Vankac race
+                                            echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://vankac-race.cz">ZDE.</a></p>';
+                                    break;
 
 
                                     
