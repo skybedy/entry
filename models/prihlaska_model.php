@@ -153,7 +153,7 @@ class Prihlaska_Model extends Model{
     
     //v případě 1 a 2 se bere typ z metody TpPrihlasky, která je volána xhr finisf, v případě 3 je typ_prihlášky  dodáván ručně v kontroleru
     public function xhrSaveToDB($typ_prihlasky){
-	if($this->IdZavodu == 13){
+	if($this->IdZavodu == 13 || $this->IdZavodu == 19){
 	    $tp = $typ_prihlasky;
 	}
 	else{
@@ -1074,7 +1074,7 @@ na +420 776131313.';
 		}
 		
 
-        elseif($this->IdZavodu == 13){//Cross Country Open
+        elseif($this->IdZavodu == 13 || $this->IdZavodu == 19){//Cross Country Open
             $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' '.YEAR.'.<br />';
             $mail1->Body .= '<hr />';
             $mail1->Body .= 'Vaše údaje jsou:<br />';
@@ -1087,7 +1087,7 @@ na +420 776131313.';
             $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
             $mail1->Body .= '<hr />';
         }
-        elseif($this->IdZavodu == 14){//Cross Country Hobby
+        elseif($this->IdZavodu == 14 || $this->IdZavodu == 20){//Cross Country Hobby
             $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' '.YEAR.'.<br />';
             $mail1->Body .= '<hr />';
             $mail1->Body .= 'Vaše údaje jsou:<br />';
@@ -1470,10 +1470,10 @@ na +420 776131313.';
 	public function VypisPrihlasek(){
 	    //$this->Prevod();
 	    $str = false;
-	    if($this->IdZavodu == 13){
+	    if($this->IdZavodu == 13 || $this->IdZavodu == 19){
 		$str .= $this->VypisPrihlasekEnduro();
 	    }
-	    elseif($this->IdZavodu == 14 ){ //cc hobby
+	    elseif($this->IdZavodu == 14 || $this->IdZavodu == 20){ //cc hobby
 		$sql2 = "SELECT $this->sqlprihlaskyjednotlivci.*,DATE_FORMAT($this->sqlprihlaskyjednotlivci.datum_narozeni,'%Y') AS rocnik,$this->sqlkategorie.nazev_k AS nazev_kategorie,$this->sqlkategorie.id_kategorie FROM $this->sqlprihlaskyjednotlivci,$this->sqlkategorie WHERE $this->sqlprihlaskyjednotlivci.id_zavodu = :id_zavodu AND $this->sqlprihlaskyjednotlivci.poradi_podzavodu = :poradi_podzavodu AND $this->sqlprihlaskyjednotlivci.id_kategorie = $this->sqlkategorie.id_kategorie "
 			  . "ORDER BY "
 			  . "$this->sqlprihlaskyjednotlivci.prijmeni_1 ASC";

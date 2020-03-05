@@ -342,7 +342,7 @@
 
 
 
-			<?php if($race_id == 13) : ?> 
+			<?php if($race_id == 13 || $race_id == 19) : ?> 
 			     <div id="prihlasovaci_formular_enduro_wrapper">
                                  <?php if($race_id == 26){ ?>
                                      <p>Registrace prostřednictvím Internetu již byla ukončena. Na závody nicméně bude možné přihlásit se i v den závodu přímo na místě.</p>     
@@ -401,6 +401,10 @@
                                     break;
                                     case 18: // Vankac race
                                             echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://vankac-race.cz">ZDE.</a></p>';
+                                    break;
+                                    
+                                    case 20: //hobby trnavka
+                                            require 'forms/cc_hobby.php';
                                     break;
 
 
