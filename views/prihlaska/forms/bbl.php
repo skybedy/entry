@@ -15,10 +15,10 @@
 	<option value="1" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 1) ? ('selected="selected"') : ('')) ?>>30 km</option>
 	<option value="2" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 2) ? ('selected="selected"') : ('')) ?>>50 km</option>
 	<option value="3" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 3) ? ('selected="selected"') : ('')) ?>>80 km</option>
-	<option value="4" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 4) ? ('selected="selected"') : ('')) ?>>Předžáci, předžákyně (2013+)</option>
-	<option value="5" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 5) ? ('selected="selected"') : ('')) ?>>Žáci, žákyně (2010-2012)</option>
-	<option value="6" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 6) ? ('selected="selected"') : ('')) ?>>Mladší žáci, žákyně (2007-2009)</option>
-	<option value="7" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 7) ? ('selected="selected"') : ('')) ?>>Starší žáci, žákyně (2005-2006)</option>
+	<option value="4" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 4) ? ('selected="selected"') : ('')) ?>>Předžáci, předžákyně (2014+)</option>
+	<option value="5" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 5) ? ('selected="selected"') : ('')) ?>>Žáci, žákyně (2011-2013)</option>
+	<option value="6" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 6) ? ('selected="selected"') : ('')) ?>>Mladší žáci, žákyně (2008-2010)</option>
+	<option value="7" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 7) ? ('selected="selected"') : ('')) ?>>Starší žáci, žákyně (2006-2007)</option>
 	<option value="9" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 9) ? ('selected="selected"') : ('')) ?>>Koloběžky (30km)</option>
     </select>
 </div>
@@ -76,12 +76,12 @@
 	</div>
     </div>
 </div>       
-	<!--<div class="form-group">
+	<div class="form-group">
 	   <select name="tricko" class="form-control placeholder  required">
 		<option value="" selected>Tričko </option>
-		<option value="bez">Bez trička</option>-->
+		<option value="bez">Bez trička</option>
 		<?php	
-                /*
+                
 		    $tricka = Array();
 		   $tricka['S'] = 'S';
 		    $tricka['M'] = 'M';
@@ -90,12 +90,12 @@
 		    $tricka['XXL'] = 'XXL';
 		    foreach($tricka as $key => $val){
 			echo '<option value="'.$val.'"'.((isset($udaje['tricko']) && $udaje['tricko'] == $val) ? 'selected="selected"' : '').'>'.$val.'</option>';
-		    }*/
+		    }
 		?>
-	<!--    </select>
-	</div>-->
+	    </select>
+	</div>
 
-<input type="hidden" name="tricko" value="bez" />
+<input type="hidden" name="trickobez" value="bez" />
 
 <div class="form-group">
     <input  type="email" name="mail" class="required form-control" placeholder="E-mail" value="<?php echo (isset($udaje['mail'])) ? ($udaje['mail']) : ('') ?>" />

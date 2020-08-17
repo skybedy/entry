@@ -41,9 +41,11 @@
               <li>
               <a href="<?php echo URL ?>prihlaska">Přihlásit se k závodu</a>
               </li> 
+              <?php if($_SESSION['race_id'] != 18000): ?>
               <li>
               <a href="<?php echo URL ?>prihlaska/vypis-prihlasek">Výpis přihlášek</a>
               </li> 
+              <?php endif; ?>
               <li>
               <a href="<?php echo URL ?>administrace">Administrace přihlášek</a>
               </li>

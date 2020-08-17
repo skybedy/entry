@@ -35,7 +35,7 @@
     <select name="rok_narozeni" class="form-control required placeholder">
         <option value="" selected disabled>Rok narození / Year of birth</option>
         <?php
-            for($j=1920;$j<=2014;$j++){
+            for($j=1920;$j<=2019;$j++){
                     echo '<option value="'.$j.'" '.((isset($udaje['rok_narozeni']) && $udaje['rok_narozeni'] == $j) ? 'selected="selected"' : '').'>'.$j.'</option>';
             }
         ?>
@@ -70,7 +70,8 @@
 	    <select name="tricko" class="form-control placeholder required">
 		<option value="" selected>Tričko / Shirt (+ 200 Kč)</option>
                 <option value="bez">Bez trička</option>
-		<?php		
+		<?php	
+                
 		    $tricka = Array();
                     
 		    $tricka['S'] = 'S';
@@ -80,13 +81,13 @@
 		    $tricka['XXL'] = 'XXL';
 		    foreach($tricka as $key => $val){
 			echo '<option value="'.$val.'"'.((isset($udaje['tricko']) && $udaje['tricko'] == $val) ? 'selected="selected"' : '').'>'.$key.'</option>';
-		    }
+		    } 
 		?>
 	    </select>
 	</div>
     </div>
 </div>
-   <p>Náhled trička je <a target="_blank" href="https://entry.timechip.cz/public/doc/osecanska-slapka-tricko-2019.pdf">ZDE</a></p>
+  <!-- <p>Náhled trička je <a target="_blank" href="https://entry.timechip.cz/public/doc/osecanska-slapka-tricko-2019.pdf">ZDE</a></p>-->
 
 <div class="form-group">
     <input  type="email" name="mail" class="required form-control" placeholder="E-mail" value="<?php echo (isset($udaje['mail'])) ? ($udaje['mail']) : ('') ?>" />

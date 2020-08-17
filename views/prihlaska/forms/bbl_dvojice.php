@@ -4,8 +4,8 @@
     $tricka['S'] = 'S';
     $tricka['M'] = 'M';
     $tricka['L'] = 'L';
-   // $tricka['XL'] = 'XL';
-    //$tricka['XXL'] = 'XXL';
+    $tricka['XL'] = 'XL';
+    $tricka['XXL'] = 'XXL';
 
     $typ_prihlasky = 2;
     $id_meny = 2;
@@ -78,7 +78,7 @@
 	$str .= '</div>';
 	
         
-        /*
+        
         $str .= '<div class="form-group">';
 	$str .= '<select name="tricko_'.$i.'" class="form-control placeholder">';
 	$str .= '<option value="">Tričko</option>';
@@ -87,9 +87,9 @@
 	    $str .= '<option value="'.$val.'"'.((isset($udaje['tricko_'.$i]) && $udaje['tricko_'.$i] == $val) ? 'selected="selected"' : '').'>'.$key.'</option>';
 	}
 	$str .= '</select>';
-	$str .= '</div>';*/
+	$str .= '</div>';
 	
-	$str.= '<input type="hidden" name="tricko_'.$i.'" value="bez" />';
+	$str.= '<input type="hidden" name="trickobez_'.$i.'" value="bez" />';
         
         $str .= '<div class="form-group">';
 	$str .= '<input name="mail_'.$i.'" class="form-control required email" placeholder="E-mail" value="'.(isset($udaje['mail_'.$i]) ? $udaje['mail_'.$i] : '').'" />';

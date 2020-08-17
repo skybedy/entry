@@ -1,0 +1,5 @@
+config.php
+libs/phpexcel
+libs/phpmailer
+public/doc
+nbproject

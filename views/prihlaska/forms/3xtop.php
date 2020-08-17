@@ -11,18 +11,17 @@
     <select name="poradi_podzavodu" class="form-control required placeholder">
 	<option value="" selected disabled>Vyberte závod</option>
 	<option value="1" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 1) ? ('selected="selected"') : ('')) ?>>Silniční kolo</option>
-	<option value="2" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 2) ? ('selected="selected"') : ('')) ?>>Horské kolo</option>
-	<option value="3" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 3) ? ('selected="selected"') : ('')) ?>>Trekingové kolo</option>
-	<option value="4" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 4) ? ('selected="selected"') : ('')) ?>>Elektro kolo</option>
-	<option value="5" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 5) ? ('selected="selected"') : ('')) ?>>Kolobežka</option>
-	<option value="6" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 6) ? ('selected="selected"') : ('')) ?>>Běh</option>
+	<option value="2" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 2) ? ('selected="selected"') : ('')) ?>>Horské + trekingové kolo</option>
+	<option value="3" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 4) ? ('selected="selected"') : ('')) ?>>Elektro kolo</option>
+	<option value="4" <?php echo ((isset($udaje['poradi_podzavodu']) && $udaje['poradi_podzavodu'] == 6) ? ('selected="selected"') : ('')) ?>>Běh</option>
     </select>
 </div>
+<!--
  <div class="checkbox">
     <label>
         <input type="checkbox" name="handicap"  /> Zašktněte pouze v případě, kdy z prokazatelných důvodů chcete závodit v kategorii handicapovaných sportovců<br /><br />
     </label>
-</div>
+</div>-->
 
 
 
@@ -87,6 +86,7 @@
 <div class="form-group"> 
     <input type="tel" name="telefon_2" class="form-control required" placeholder="Telefon alternativní (třeba pro případ zranění)" value="<?php echo (isset($udaje['telefon_2'])) ? ($udaje['telefon_2']) : ('') ?>" />
 </div>
+
  <div class="checkbox">
     <label>
         <input type="checkbox" name="prohlaseni_zavodnika" class="required" /> Souhlasím s poskytnutím osobních údajů pro potřeby této registrace <br /><br />

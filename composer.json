@@ -1,0 +1,13 @@
+{
+    "name": "vendor/entry",
+    "description": "Description of project entry.",
+    "authors": [
+        {
+            "name": "skybedy",
+            "email": "skybedy@gmail.com"
+        }
+    ],
+    "require": {
+        "phpoffice/phpexcel": "dev-master"
+    }
+}

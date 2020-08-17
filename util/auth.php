@@ -29,8 +29,8 @@ class Auth{
 			$pas = 'e2PfFVTEzjnZavYNkF2u';
                     break;
                     case 6:
-			$log = 'nachodska24';
-			$pas = 'Vwk9Pw7q6XB9';
+			$log = 'belsky_okruh';
+			$pas = 'Vwk9Pw7q6Ue';
                     break;
                     case 9:
 			$log = 'beskydsky_biatlon';
@@ -45,18 +45,57 @@ class Auth{
 			$pas = 'XcvmxL3sWKHwe3';
                     break;
                     case 12: // 
-                        $log = 'novojicinsky_pulmaraton';
-                        $pas = 'lKfTVgiKRSKf3TludMr1';
+                        $log = 'welzl';
+                        $pas = 'lKfTVgiKRSKf3T';
                     break;	
                     case 15: // zatopek
                         $log = 'brkez';
                         $pas = '54qwTweLoeO3Q4';
                     break;
-                    case 18: // vankac
-                        $log = 'vankac_race';
-                        $pas = '32MqwweLqJ3Q4';
+                    case 18: // 24sokolov
+                        $log = 'sokolov';
+                        $pas = '32MqwLqJ3Q4';
                     break;
-
+                    case 21: // biatlonubri
+                        $log = 'biatlon_zubri';
+                        $pas = '5mqU2LLqOujQ4';
+                    break;
+                    case 22: // hlucin
+                        $log = 'hlucinsky_pulmaraton';
+                        $pas = '3dRsgq4Q7JdfWrGCJFyu';
+                    break;
+                    case 20: // cc_hoby
+                        $log = 'cc_hobby';
+                        $pas = '2020';
+                    break;
+                    case 23: // cc_hoby
+                        $log = '3xtop';
+                        $pas = 'KoweLo54S';
+                    break;
+                    case 27: // bbl
+                        $log = 'bbl';
+                        $pas = 'KoOkQLo54S4l';
+                    break;
+                    case 31: // zbluňk
+                        $log = 'zblunk';
+                        $pas = 'KoOgo4554H5W';
+                    break;
+                    case 32: // tauris
+                        $log = 'bikepoint';
+                        $pas = '0948777670';
+                    break;
+                    case 33:  // vetrkovice
+                        $log = 'vetrkovice';
+                        $pas = 'k4Koi5KHwe855qwr54';
+                    break;
+                    case 34:  // raca
+                        $log = 'raca';
+                        $pas = 'k3K4qKHwJi5qwr54';
+                    break;
+                    case 38:  // osecany
+                        $log = 'osecanska_slapka';
+                        $pas = 'k5adqKHwKowt';
+                    break;
                 }
 		
 		$log1 = 'skybedy';
