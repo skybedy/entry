@@ -34,7 +34,7 @@ class Prihlaska extends Controller{
             if($this->model->IdZavodu == 38){
                 $this->view->ponozky = $this->model->Ponozky();
             }
-            if($this->model->IdZavodu == 84){
+            if($this->model->IdZavodu == 8){
 		$this->view->zdravotni_pojistovny = $this->model->ZdravotniPojistovny();
 		$this->view->znacky_motocyklu = $this->model->ZnackyMotocyklu();
 		$this->view->objemy_motoru = $this->model->objemy_motoru();
@@ -55,11 +55,11 @@ class Prihlaska extends Controller{
 	public function xhrFinish($id_zavodu){
 	    if($this->model->xhrFinish($id_zavodu)){
 		$this->view->mail_na_zavodnika = $this->model->mail_na_zavodnika;
-		//session_destroy();
-		//header('Location: '.URL.'prihlaska/uspesne_prihlaseni');
+		session_destroy();
+		header('Location: '.URL.'prihlaska/uspesne_prihlaseni');
 	    }
 	    else{
-		//header('Location: '.URL.'prihlaska/neuspesne_prihlaseni');
+		header('Location: '.URL.'prihlaska/neuspesne_prihlaseni');
 	    }
 	}
         

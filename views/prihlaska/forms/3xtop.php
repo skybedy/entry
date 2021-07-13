@@ -92,9 +92,26 @@
         <input type="checkbox" name="prohlaseni_zavodnika" class="required" /> Souhlasím s poskytnutím osobních údajů pro potřeby této registrace <br /><br />
     </label>
 </div>
+
+<div class="checkbox">
+    <label>
+        <input type="checkbox"  name="cokoli_aby_fungoval_required" class="required" /> Účastníci musí dodržovat pravidla silničního provozu, zejména dodržovat jízdu při pravém okraji vozovky, v nepřehledných úsecích, zejména v zatáčkách. <b>Během akce jakožto i mimo ni nelze vjíždět mimo trasy určené pro akci časovka 3xTOP.cz Lysá hora!</b> <br /><br />
+    </label>
+</div>
+
+
+<div class="checkbox">
+    <label>
+        <input type="checkbox" name="spac" /> Prohlašuji, že jsem členem spolku SPAC (Občanské sdružení Slezský pohár amatérských cyklistů) s platnou licenci pro rok 2021 <br /><br />
+    </label>
+</div>
+
+
+
 <div class="form-group"> 
 <textarea placeholder="Vzkaz pořadateli, máte-li nějaký" class="form-control" name="vzkaz" cols="40" rows="5"><?php echo (isset($udaje['vzkaz'])) ? ($udaje['vzkaz']) : ('') ?></textarea>
 </div>
+
 <div class="form-group"> 
     <button type="submit" class="form-control btn btn-primary">Zkontrolovat údaje</button>
 </div>

@@ -17,7 +17,8 @@
 
 <div class="form-group">
     <input name="nazev_tymu" class="form-control required" placeholder="Název týmu" value="<?php echo (isset($udaje['nazev_tymu'])) ? ($udaje['nazev_tymu']) : ('') ?>" />
-    <span class="color-red">V případě, že závodíte sami, můžete použít buď nějaký název týmu (např. TimeChip Quad Team), nebo jen jméno a příjmení (např. Martin Kupec) </span>
+    <span class="color-red">V případě, že závodíte sami, můžete použít buď nějaký název týmu (třeba
+        Šikland Quad Team), nebo jen jméno a příjmení (třeba Olinka Válková) </span>
 </div>
 
 <div class="form-group">

@@ -154,11 +154,9 @@
 	    <label>Název týmu *</label>
 	    <select name="id_tymu" class="form-control required placeholder">
 		<option value="" selected disabled>Název teamu *</option>
-                <option value="7610">Bez týmu</option>
 		    {{#each enduro_server_data.tymy}}
 			<option value="{{id_tymu}}" {{selected id_tymu ../racer_details.id_tymu}}>{{nazev_tymu}}</option>
 		    {{/each}}
-                    
 		</select>
 	</div>
 	<div class="form-group"> 
@@ -344,16 +342,15 @@
 
 
 
-			<?php if($race_id == 17) : ?> 
+			<?php if($race_id == 46) : ?> 
 			     <div id="prihlasovaci_formular_enduro_wrapper">
-				<?php if($race_id == 17000){ ?>
-					<p>Registrace prostřednictvím Internetu již byla ukončena. Na závody nicméně bude možné přihlásit se i v den závodu přímo na místě.</p>     
-				<?php 
-					}
-                    else{
-                ?>
+                                 <?php if($race_id == 46){ ?>
+                                     <p>Registrace prostřednictvím Internetu již byla ukončena. Na závody nicméně bude možné přihlásit se i v den závodu přímo na místě.</p>     
+                                 <?php }
+                                        else{
+                                 ?>
                               
-                <form id="overeni_udaju_enduro">
+					<form id="overeni_udaju_enduro">
 				    <div class="form-group">
 					 <input type="text" name="race_number" class="form-control" placeholder="Zadejte své startovní číslo" />
 				    </div>
@@ -364,7 +361,7 @@
 					<button type="submit" id="overeni_udaju_enduro_button" class="form-control btn btn-primary">Odeslat</button>
 				    </div>
 				</form>
-                    <p>V případě, že se vám nedaří přihlásit, napište na <a href="mailto:info@timechip.cz">info@timechip.cz</a>, nebo zavolejte na 776131313</a><p>
+                                     <p>V případě, že se vám nedaří přihlásit, napište na <a href="mailto:info@timechip.cz">info@timechip.cz</a>, nebo zavolejte na 776131313</a><p>
                         <?php } ?>
                             
                             </div>  
@@ -374,34 +371,120 @@
 			    <!-- formulář pro vše krom endura -->
 			    <form action="<?php echo URL;?>prihlaska/xhrOvereni" id="prihlasovaci_formular"  method="post">
 			    <?php
-					switch($race_id){
-                    	case 5:  //Perun
-							echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://www.perunmaraton">ZDE.</a></p>';
-				    	break;
-                               
-						case 7:  //Zubri
-							echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://sport.mesto-zubri.cz/kalendar-akci/biatlonovy-zavod-svobody-c1912">ZDE.</a></p>';
-				    	break;
-						case 18: //hobby sikl
-							require 'forms/konec_prihlasek.php';
-						break;
-						case 11:  //BRKEZ
-							echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://beh-roznov.koprivnice.org">ZDE.</a></p>';
-				    	break;
-						case 13: //3xtop
-							require 'forms/3xtop.php';
-						break;
-						case 21:  //24Sokolv
-							echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://www.sokolovska24mtb.cz">ZDE.</a></p>';
-				    	break;
-						case 28:  //24Sokolv
-							echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://www.sokolovska24mtb.cz">ZDE.</a></p>';
-				    	break;
+				switch($race_id){
+                                    case 106000: 
+                                        require 'forms/dvojice_plus_kapitan.php';
+				    break;
+                                    case 2:  //winter hei run
+					echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://www.aktivitytour.cz/registrace-winter-hei-run">ZDE.</a></p>';
+				    break;
+                                    case 4:  //winter hei run
+					echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://www.perunmaraton.cz/cz/registrace">ZDE.</a></p>';
+				    break;
+                                    case 5:  //mtb bike jam
+					echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://nachodska24hoursmtb.cz/registration.html">ZDE.</a></p>';
+				    break;
+                                    case 6:  //belsky okruh
+                                            require 'forms/belsky_okruh.php';
+				    break;
+					case 9: 
+						require 'forms/beskydsky_biatlon_dvojice.php';
+					break;
+					case 10: //alis run
+						//require 'forms/alis_run.php';
+                                            require 'forms/konec_prihlasek.php';
+				    break;
+                                    case 14: //hobby sikl
+                                            require 'forms/cc_hobby.php';
+                                    break;
+                                    case 11: //Aktivity duatlon
+                                            echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://www.aktivitytour.cz/portfolio/heipark-duatlon">ZDE.</a></p>';
+                                    break;
+                                    case 12: //NJ pulmaraton
+                                            echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://www.welzluvkvadriatlon.cz/registrace">ZDE.</a></p>';
+                                    break;
+                                    case 15: //Zátoopek
+                                            echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://beh-roznov.koprivnice.org">ZDE.</a></p>';
+                                    break;
+                                    case 18: // Sokolov
+                                            echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://www.sokolovska24mtb.cz/registrace/">ZDE.</a></p>';
+                                    break;
+                                    
+                                    case 20: //hobby trnavka
+                                            require 'forms/konec_prihlasek.php';
+                                    break;
+                                    case 21: //zubri
+                                            echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://sport.mesto-zubri.cz/aktualne/biatlonovy-zavod-svobody-a474">ZDE.</a></p>';
+                                    break;
+                                    case 22: //hlucinsky_pulmaraton
+						require 'forms/hlucinsky_pulmaraton.php';
+                                    break;
+                                    case 23: //3xtop
+						require 'forms/3xtop.php';
+                                    break;
+                                    case 31: //zubri
+                                            echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://www.prilepskyzblunk.cz">ZDE.</a></p>';
+                                    break;
+                                    case 32: //tauris
+                                            echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://www.blaticko.sk/prihlasovanie-zlom-vaz">ZDE.</a></p>';
+                                    break;
+                                    case 34: //rača
+                                            require 'forms/konec_prihlasek.php';
+                                    break;
+                                    case 38: //osecanska_slapka
+                                        require 'forms/osecanska_slapka.php';
+                                    break;
+                                    case 40: //cc hobby sikl 2
+                                            require 'forms/konec_prihlasek.php';
+                                    break;
+                                    case 47: //cc hobby liberec
+                                        require 'forms/konec_prihlasek.php';
+                                    break;
+                                    case 48: //cc hobby liberec
+                                        require 'forms/konec_prihlasek.php';
+                                    break;
+                                    case 41: //rača
+                                            echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://www.zapomenutehory.cz/registrace">ZDE.</a></p>';
+                                    break;
+                                
+                                
+                                
 
-	
-						
-						
-						case 60000; //sikland winter race
+
+                                    
+                         case 68: //aktivity race
+					if(Session::get('poradi_podzavodu')){
+					    $poradi_podzavodu = Session::get('poradi_podzavodu');
+					}
+					else{
+					    $poradi_podzavodu = false;
+					}
+				    ?>
+					<div class="form-group">
+					    <select class="form-control" id="vyber_zavodu"z onchange="window.location = 'prihlaska/poradi-podzavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+						<option value="">Vyberte, který se závodů chcete absolvovat</option>
+						<option value="1" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 1) ? ('selected="selected"') : ('')) ?>>Jednotlivci</option>
+						<option value="2" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 2) ? ('selected="selected"') : ('')) ?>>Týmy</option>
+						<option value="3" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 3) ? ('selected="selected"') : ('')) ?>>MINI AKTIVITY RACE</option>
+					    </select>
+					</div>
+				    <?php
+                                    
+                                   if($poradi_podzavodu == 1){
+					    require 'forms/winter_hei_run_jednotlivci.php';
+					}					
+					elseif ($poradi_podzavodu == 2) {
+					    require 'forms/winter_hei_run_tymy.php';
+					}
+                                        else{
+                                            require 'forms/default.php';
+                                        }
+				    break; 				    
+                                
+                                
+                                
+                                    
+                                    case 1;
 					if(Session::get('pocet_clenu')){
 					    $pocet_clenu = Session::get('pocet_clenu');
 					}
@@ -432,7 +515,36 @@
                                         require 'forms/ctyrkolky_sikl.php';
                                     }
                                     break; //konec 
+                                    
+                                    case 27: //bbl
+					if(Session::get('poradi_podzavodu')){
+					    $poradi_podzavodu = Session::get('poradi_podzavodu');
+					}
+					else{
+					    $poradi_podzavodu = false;
+					}
+				    ?>
+					<div class="form-group">
+					    <select class="form-control" id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-podzavodu/'+this.options[this.selectedIndex].value+'';" name="vyber_zavodu">	  
+						<option value="">Vyberte, který se závodů chcete absolvovat</option>
+						<option value="1" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 1) ? ('selected="selected"') : ('')) ?>>Závod jednotlivců</option>
+						<option value="8" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 8) ? ('selected="selected"') : ('')) ?>>Závod dvojic</option>
+					    </select>
+					</div>
+				    <?php
+					if($poradi_podzavodu == 1){
+                                            require 'forms/bbl.php';
+                                            //require 'forms/konec_prihlasek.php';
+					}
+					else{
+					    require 'forms/bbl_dvojice.php';
+                                            //require 'forms/konec_prihlasek.php';
+					}
+				    break; //konec bbl
 
+                                    
+                                    
+                                    
                                     default:
 					require 'forms/default.php';
 				    }

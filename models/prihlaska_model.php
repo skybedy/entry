@@ -1,7 +1,7 @@
 
 <?php
 class Prihlaska_Model extends Model{
-        private $vychozi_vs = 202000001;
+        private $vychozi_vs = 202100001;
 	public $sqlzavody;
 	public $sqlprihlasky;
 	public  $sqlpodzavody;
@@ -154,7 +154,7 @@ class Prihlaska_Model extends Model{
     
     //v případě 1 a 2 se bere typ z metody TpPrihlasky, která je volána xhr finisf, v případě 3 je typ_prihlášky  dodáván ručně v kontroleru
     public function xhrSaveToDB($typ_prihlasky){
-	if($this->IdZavodu == 13 || $this->IdZavodu == 19){
+	if($this->IdZavodu == 17){
 	    $tp = $typ_prihlasky;
 	}
 	else{
@@ -1041,122 +1041,7 @@ na +420 776131313.';
         $mail1->Body = "";
         $veta = "Pro potvrzení této registrace je třeba uhradit platbu nejpozději do 18. 8. 2020, a sice dle údajů uvedených níže. S ohledem na aktuální situaci nejspíše nebude možná registrace ani platba na místě v den závodu! V důsledku nařízení Vlády ČR je počet startujících v maratonu omezen na 400! Počet účastníků dětského závodu na 50!<br>";
         
-        if($this->IdZavodu == 1){
-            $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
-            $mail1->Body .= '<hr />';
-            $mail1->Body .= $veta;
-            $mail1->Body .= 'Částka: '.$this->vychozi_startovne.' Kč<br />';
-            $mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
-           
-            $mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
-            $mail1->Body .= 'IBAN: '.$this->iban.'<br />';
-            $mail1->Body .= 'SWIFT: '.$this->swift.'<br />';
-            $mail1->Body .= '<hr />';	
-            /*
-            $mail1->Body .= 'Pro závodníky ze Slovenska';
-            $mail1->Body .= 'Banka: Tatrabanka<br />';   
-            $mail1->Body .= 'Číslo účtu: SKG7 1100 0000 0026 1918 7672<br />';
-            $mail1->Body .= '<hr />';	*/		
-            $mail1->Body .= $this->poradatel.'<br />';
-            $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
-            $mail1->Body .= '<hr />';
-        }
-        
-        elseif($this->IdZavodu == 27){//bbl
-          if($this->udaje['poradi_podzavodu'] < 4){
-              $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' '.YEAR.'.<br />';
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= 'Vaše údaje jsou:<br />';
-              $mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
-              $mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost']}<br />";
-              $mail1->Body .= "Rok narození: {$this->udaje['rok_narozeni']}<br />";
-              $mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= $veta;
-              $mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
-              $mail1->Body .= 'Částka: '.$this->startovne_kc.' Kč<br />';
-              $mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= $this->poradatel.'<br />';
-              $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
-              $mail1->Body .= ($this->telefon_na_poradatele == true) ? ('Tel: '.$this->telefon_na_poradatele) : ('');
-              $mail1->Body .= '<hr />';
-
-          }
-        
-        elseif($this->udaje['poradi_podzavodu'] < 8 AND $this->udaje['poradi_podzavodu'] > 3){
-               
-            $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' '.YEAR.'.<br />';
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= 'Vaše údaje jsou:<br />';
-              $mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
-              $mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost']}<br />";
-              $mail1->Body .= "Rok narození: {$this->udaje['rok_narozeni']}<br />";
-              $mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= $veta;
-              $mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
-              $mail1->Body .= 'Částka: '.$this->startovne_kc.' Kč<br />';
-              $mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= $this->poradatel.'<br />';
-              $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
-              $mail1->Body .= ($this->telefon_na_poradatele == true) ? ('Tel: '.$this->telefon_na_poradatele) : ('');
-              $mail1->Body .= '<hr />';
-
-            }
-            
-            
-            elseif($this->udaje['poradi_podzavodu'] == 9){
-              $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' '.YEAR.'.<br />';
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= 'Vaše údaje jsou:<br />';
-              $mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
-              $mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost']}<br />";
-              $mail1->Body .= "Rok narození: {$this->udaje['rok_narozeni']}<br />";
-              $mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= $veta;
-              $mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
-              $mail1->Body .= 'Částka: '.$this->startovne_kc.' Kč<br />';
-              $mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= $this->poradatel.'<br />';
-              $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
-              $mail1->Body .= ($this->telefon_na_poradatele == true) ? ('Tel: '.$this->telefon_na_poradatele) : ('');
-              $mail1->Body .= '<hr />';
-
-          }
-        else{
-              $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
-              $mail1->Body .= '<hr />';
-              $mail1->Body .= $veta;
-              $mail1->Body .= 'Částka: '.$this->startovne_kc.' Kč<br />';
-              $mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
-              $mail1->Body .= 'Číslo účtu - '.$this->cislo_uctu.'<br />';
-              $mail1->Body .= '<hr />';			
-              $mail1->Body .= $this->poradatel.'<br />';
-              $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
-              $mail1->Body .= '<hr />';
-
-          }
-        }
-        elseif($this->IdZavodu == 9){//Beskydsky biatlon
-            //echo 'hoj';
-            $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
-            $mail1->Body .= '<hr />';
-            $mail1->Body .= 'Realizujte prosím platbu podle následujících údajů:<br />';
-            $mail1->Body .= 'Částka: '.$this->startovne_kc.' Kč<br />';
-            $mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
-            $mail1->Body .= 'Číslo účtu - '.$this->cislo_uctu.'<br />';
-            $mail1->Body .= '<hr />';			
-            $mail1->Body .= $this->poradatel.'<br />';
-            $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
-            $mail1->Body .= '<hr />';
-		}
-		
-
-        elseif($this->IdZavodu == 13 || $this->IdZavodu == 19){//Cross Country Open
+        if($this->IdZavodu == 17){//Cross Country Open
             $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' '.YEAR.'.<br />';
             $mail1->Body .= '<hr />';
             $mail1->Body .= 'Vaše údaje jsou:<br />';
@@ -1169,8 +1054,7 @@ na +420 776131313.';
             $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
             $mail1->Body .= '<hr />';
         }
-        
-        elseif($this->IdZavodu == 14 || $this->IdZavodu == 20){//Cross Country Hobby
+        elseif($this->IdZavodu == 18){//Cross Country Hobby
             $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' '.YEAR.'.<br />';
             $mail1->Body .= '<hr />';
             $mail1->Body .= 'Vaše údaje jsou:<br />';
@@ -1181,32 +1065,9 @@ na +420 776131313.';
             $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
             $mail1->Body .= '<hr />';
         }
+
         
-        elseif($this->IdZavodu == 6){//belsky_okruh
-            $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' '.YEAR.'.<br />';
-            $mail1->Body .= '<hr />';
-            $mail1->Body .= 'Vaše údaje jsou:<br />';
-            $mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
-            $mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost']}<br />";
-            $mail1->Body .= "Rok narození:{$this->udaje['rok_narozeni']}<br />";
-            $mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
-            $mail1->Body .= '<hr />';
-            if($this->udaje['poradi_podzavodu'] == 1){
-                $mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
-                $mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
-                $mail1->Body .= 'Částka: '.$this->startovne_kc.' Kč / <span style="color:red">Mieszkańcy Polski placą 40 zł w dzień zawodów</span><br />';
-                $mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
-            }
-            else{
-                $mail1->Body .= 'Startovné na dětské závody je 50 Kč a platí se až v de závodu.<br />';
-            }
-            $mail1->Body .= '<hr />';
-            $mail1->Body .= $this->poradatel.'<br />';
-            $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
-            $mail1->Body .= ($this->telefon_na_poradatele == true) ? ('Tel: '.$this->telefon_na_poradatele) : ('');
-            $mail1->Body .= '<hr />';
-            $mail1->AddAttachment('./public/doc/zakladni-informace-belsky-okruh.pdf', $name = '', $encoding = 'base64', $type = 'application/octet-stream');
-        }
+		
 
         
 
@@ -1249,37 +1110,16 @@ na +420 776131313.';
 	    isset($this->udaje['pohlavi']) ? $pohlavi = $this->udaje['pohlavi'] : ''; 
 	    isset($this->udaje['pohlavi_1']) ? $pohlavi = $this->udaje['pohlavi_1'] : ''; 
             
-            if($this->IdZavodu == 1){
-                $this->kategorie = $this->udaje['id_kategorie'];
-            }
-            elseif($this->IdZavodu == 9){
-                if($this->udaje['poradi_podzavodu'] == 1){
-                    $this->kategorie = $this->udaje['id_kategorie'];
+            if($this->IdZavodu == 18){
+                if(isset($this->udaje["open"])){
+                    $this->VyberKategorieOpen($this->udaje['poradi_podzavodu']);
                 }
-                elseif($this->udaje['poradi_podzavodu'] == 2){
-                    
+                else{
+                    $this->VyberKategorieDefault($this->udaje['poradi_podzavodu']);
                 }
             }
             
-            elseif($this->IdZavodu == 10){
-                if($this->udaje['poradi_podzavodu'] == 3){
-                    $this->VyberKategorieBezPoradiPodzavodu();
-                }
-                else{
-                    $this->VyberKategorieDefault($this->udaje['poradi_podzavodu']);
-                }
-            }
-            elseif($this->IdZavodu == 27){ //bbl
-                if($this->udaje['poradi_podzavodu'] < 8){
-                    $this->VyberKategorieDefault($this->udaje['poradi_podzavodu']);
-                }
-                elseif($this->udaje['poradi_podzavodu'] == 9){
-                    $this->VyberKategorieDefault($this->udaje['poradi_podzavodu']);
-                }
-                else{
-                    $this->VyberKategoriePodleId(463);
-                }
-            }
+            
 
             
             
@@ -1310,6 +1150,36 @@ na +420 776131313.';
             }
 
 	}
+        
+        
+        private function VyberKategorieOpen($poradi_podzavodu){
+	    isset($this->udaje['pohlavi']) ? $pohlavi = $this->udaje['pohlavi'] : ''; 
+	    $sql = "SELECT * FROM kategorie_{$this->RokZavodu} WHERE id_zavodu = '$this->IdZavodu' AND pohlavi = :pohlavi AND poradi_podzavodu = :poradi_podzavodu AND open_kategorie = 1";
+            $sth = $this->db->prepare($sql);
+	    $sth->execute(Array(':pohlavi' => $pohlavi,':poradi_podzavodu' => $poradi_podzavodu));
+	    if($sth->rowCount()){ 
+		$data1 =  $sth->fetchObject();
+		$this->kategorie = $data1->nazev_k;
+		$this->kod_kategorie = $data1->kod_k;
+		$this->id_kategorie = $data1->id_kategorie;
+	    }
+            else{
+                $sql = "SELECT * FROM kategorie_{$this->RokZavodu} WHERE id_zavodu = '$this->IdZavodu' AND pohlavi = :pohlavi AND poradi_podzavodu = :poradi_podzavodu AND open_kategorie = 1";
+                $sth = $this->db->prepare($sql);
+                $sth->execute(Array(':pohlavi' => "B",':poradi_podzavodu' => $poradi_podzavodu));
+                if($sth->rowCount()){ 
+                    $data1 =  $sth->fetchObject();
+                    $this->kategorie = $data1->nazev_k;
+                    $this->kod_kategorie = $data1->kod_k;
+                    $this->id_kategorie = $data1->id_kategorie;
+                }
+            }
+	}
+
+        
+        
+        
+        
         
         private function VyberKategorieParalelniKategorie($poradi_podzavodu){
 	    isset($this->udaje['pohlavi']) ? $pohlavi = $this->udaje['pohlavi'] : ''; 
@@ -1485,96 +1355,24 @@ na +420 776131313.';
 	}
 	
 	private function Startovne(){
-            if ($this->IdZavodu == 1) {
+            if ($this->IdZavodu == 6) { //winter sikland race
                 $pocet_clenu = Session::get('pocet_clenu');
                 //Session::get('pocet_clenu');
                 $this->vychozi_startovne = $this->startovne_z_db_kc * $pocet_clenu;
-                if($this->udaje['id_kategorie'] == 9){//ctyrkolky sikl
+                if($this->udaje['id_kategorie'] == 13){//ctyrkolky sikl
                     $this->vychozi_startovne = 2000;
-                    $this->konec_prihlasek = '6.2.2020';
+                    $this->konec_prihlasek = '6.2.2021';
                 }
 
                 $this->startovne_kc = $this->vychozi_startovne;
             }
-            
-            elseif($this->IdZavodu == 10){ //bystrice alis run
-                if($this->udaje['poradi_podzavodu'] > 2){
-                    $this->vychozi_startovne = 100;
-                }
-                $this->startovne_kc = $this->vychozi_startovne;
-            }
-            
-            elseif($this->IdZavodu == 22){ //hlucin
-                if($this->udaje['poradi_podzavodu'] == 2){
-                    $this->vychozi_startovne = 150;
-                }
-                $this->startovne_kc = $this->vychozi_startovne;
-            }
-            
-            elseif($this->IdZavodu == 27){ //BBL
-		
-                if($this->udaje['poradi_podzavodu'] <= 3){
-		    $vek =  date('Y') - $this->udaje['rok_narozeni'];
-                    if($vek <= 18){
-                        $this->vychozi_startovne = 300;
-                    }
-                    echo $this->udaje['tricko'];
-                    if($this->udaje['tricko'] != "bez"){
-                          echo "2";
-			$this->vychozi_startovne = $this->vychozi_startovne + 150;
-		    }
-		}
-		
-                elseif($this->udaje['poradi_podzavodu'] > 3 AND $this->udaje['poradi_podzavodu'] < 8){
-		    $this->vychozi_startovne = 100;
-		    if($this->udaje['tricko'] != "bez"){
-			$this->vychozi_startovne = $this->vychozi_startovne + 150;
-		    }
-		}
-                elseif($this->udaje['poradi_podzavodu'] == 9){
-		    $this->vychozi_startovne = 450;
-		    if($this->udaje['tricko'] != "bez"){
-			$this->vychozi_startovne = $this->vychozi_startovne + 150;
-		    }
-		}
-                else{
-                    $this->vychozi_startovne = 1000;
-		    for($i=1;$i<=2;$i++){
-			if($this->udaje['tricko_'.$i]){
-			    $this->vychozi_startovne = $this->vychozi_startovne + 150;
+			elseif($this->IdZavodu == 13){
+				if(isset($this->udaje["spac"])){
+					$this->vychozi_startovne = 200;
+				}
+				$this->startovne_kc = $this->vychozi_startovne;
 			}
-		    }
-                }
-                
-                echo $this->vychozi_startovne;
-                
-		$this->startovne_kc = $this->vychozi_startovne;
-	    }
             
-            elseif($this->IdZavodu == 38){ //osecanska slapka
-                 $vek =  date('Y') - $this->udaje['rok_narozeni'];
-                if($this->udaje['poradi_podzavodu'] == 1){
-                    if($vek > 10 AND $vek < 19){
-                        $this->vychozi_startovne = 100;
-                    }
-                     if($this->udaje['tricko'] != 'bez'){
-			$this->vychozi_startovne = $this->vychozi_startovne + 200;
-		    }
-                    
-                }
-                else{
-                    if($vek > 0 AND $vek < 19){
-                        $this->vychozi_startovne = 100;
-                    }
-                    if($this->udaje['tricko'] != 'bez'){
-			$this->vychozi_startovne = $this->vychozi_startovne + 200;
-		    }
-                }
-                
-                
-                
-                $this->startovne_kc = $this->vychozi_startovne;
-            }
 
 
 
@@ -1664,10 +1462,10 @@ na +420 776131313.';
 	public function VypisPrihlasek(){
 	    //$this->Prevod();
 	    $str = false;
-	    if($this->IdZavodu == 13 || $this->IdZavodu == 19){
+	    if($this->IdZavodu == 17){ // cc licence
 		$str .= $this->VypisPrihlasekEnduro();
 	    }
-	    elseif($this->IdZavodu == 14 || $this->IdZavodu == 20){ //cc hobby
+	    elseif($this->IdZavodu == 18){ //cc hobby
 		$sql2 = "SELECT $this->sqlprihlaskyjednotlivci.*,DATE_FORMAT($this->sqlprihlaskyjednotlivci.datum_narozeni,'%Y') AS rocnik,$this->sqlkategorie.nazev_k AS nazev_kategorie,$this->sqlkategorie.id_kategorie FROM $this->sqlprihlaskyjednotlivci,$this->sqlkategorie WHERE $this->sqlprihlaskyjednotlivci.id_zavodu = :id_zavodu AND $this->sqlprihlaskyjednotlivci.poradi_podzavodu = :poradi_podzavodu AND $this->sqlprihlaskyjednotlivci.id_kategorie = $this->sqlkategorie.id_kategorie "
 			  . "ORDER BY "
 			  . "$this->sqlkategorie.poradi ASC,$this->sqlprihlaskyjednotlivci.prijmeni_1 ASC";
@@ -1705,7 +1503,7 @@ na +420 776131313.';
 		}
 
 	    }
-            elseif($this->IdZavodu == 11){ // hei runy, atd
+            elseif($this->IdZavodu == 11111){ // hei runy, atd
                 for($i=1;$i<=$this->pocet_podzavodu;$i++){
 		    
                     $sql1 = "SELECT nazev AS nazev_podzavodu,typ_zavodnika FROM $this->sqlpodzavody WHERE id_zavodu = '$this->IdZavodu' AND poradi_podzavodu = :poradi_podzavodu";
@@ -2213,7 +2011,7 @@ na +420 776131313.';
 	    }
 	}
 	private function TymyEnduro(){
-	    $sql1 = "SELECT id_tymu,nazev_tymu FROM tymy WHERE id_enduro IS NOT NULL ORDER BY id_enduro";
+	    $sql1 = "SELECT id_tymu,nazev_tymu FROM tymy WHERE id_enduro IS NOT NULL ORDER BY nazev_tymu";
 	    $sth1 = $this->db->prepare($sql1);
 	    $sth1->execute();
 	    if($sth1->rowCount()){

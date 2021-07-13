@@ -130,9 +130,16 @@ $(function(){
 
     Handlebars.registerHelper('NazevTymu', function(id_tymu){
         var enduro_server_data = JSON.parse(sessionStorage.enduro_server_data);
+       
         var tymy = enduro_server_data.tymy;
+        
         var x = _.findWhere(tymy, {id_tymu: id_tymu});
-        return x.nazev_tymu;
+        if(x == undefined){
+            return "Bez týmu";
+        }
+        else{
+            return x.nazev_tymu;
+        }
     });
 
     Handlebars.registerHelper('NazevPojistovny', function(kod_pojistovny){
@@ -272,7 +279,7 @@ $(function(){
 	    
 	    
 	    "submit #overeni_udaju_enduro": function(ev){
-      alert();
+     // alert();
             ev.preventDefault();
 	    var verification_data = $(ev.currentTarget).serializeObject();
             

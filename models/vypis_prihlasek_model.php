@@ -198,7 +198,7 @@ class Prihlaska_Model extends Model{
 	
 	
 	private function VyberKategorie($id_zavodu){
-		$sthis->kategorie = false;
+		$this->kategorie = false;
 		$vek = date('Y') - $this->udaje['rok_narozeni'];
 		if($id_zavodu == 82){ //Deza Valachiarun
 			

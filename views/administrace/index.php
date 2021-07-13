@@ -198,7 +198,10 @@
             . 'Zatím to funguje jen u jednotlivců, týmy zas někdy příště, i tak jsem tomu věnoval půlden života.<br>'
             . 'Pokud by jste narazili na nějaký problém, budu vám vděčný za jakékoliv info, génius byl Einstein, nikoli já.<br> 31.1.19,  mk. </h5>'; */
     
-    if($this->VypisPrihlasek['jednotlivci']){
+  
+	$str .= '<p>V současné době nefunguje export do Excelu, což je způsobeno ukončenou podporou knihovny pro to sloužící. Nejspíš další týden musím najít a zprovoznit jinou.</p>';
+	
+	if($this->VypisPrihlasek['jednotlivci']){
 	$pocet_prihlasek = count($this->VypisPrihlasek['jednotlivci']);
 	$str .=  '<table class="table table-bordered table-striped table-hover zmena_udaju">';
 	$str .=  '<thead><th class="text-center">VS</th><th>Příjmení</th><th>Jméno</th><th>Tým/Bydliště</th><th>E-mail</th><th class="text-center">Telefon1</th><th>Kategorie</th><th class="text-center">Narození</th><th class="text-center">Tričko</th><th class="text-center">Startovné</th><th class="text-center">Platba</th><th class="text-center">Vzkazy<br>Poznámky</th><th class="text-center">Přihlášeno</th><th class="text-center" colspan="2">Změna údajů</th></thead>';
