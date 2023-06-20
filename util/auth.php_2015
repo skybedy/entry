@@ -1,0 +1,113 @@
+<?php
+class Auth{
+	
+    public function __construct(){
+	    $log_admin = 'skybedy';
+		$log = false;
+		$pas = false;
+		$pas_admin = 'mk1313life';
+		$id_zavodu = Session::get('race_id');
+		switch($id_zavodu){
+		    case 10://
+			$log = 'radegastova_vyzva';
+			$pas = '8PMep81wq';
+		    break;
+		    case 80://
+			$log = 'radegastova_vyzva';
+			$pas = '8PMep81wq';
+		    break;
+		    case 3://perun
+			$log = 'perun';
+			$pas = 'qoeIurQw9';
+		    break;
+		    case 4://perun
+			$log = 'nezmar';
+			$pas = 'iQwepMo7B';
+		    break;
+		    case 8://odrivous
+			$log = 'odrivousuv_pohar';
+			$pas = 'oWmK5qXsm';
+		    break;
+		    case 14://žilina
+			$log = 'bikepoint13';
+			$pas = '0948777670';
+		    break;
+		    case 16://belsky okruh
+			$log = 'belsky_okruh';
+			$pas = 'LqQ8qoW1Q';
+		    break;
+		    case 29://žilina
+			$log = 'bikepoint13';
+			$pas = '0948777670';
+		    break;
+		    case 5://kuchyna
+			$log = '24_hodin_mtbike_jam';
+			$pas = 'kW4_45qmI';
+		    break;
+		    case 64://kuchyna
+			$log = 'hlucinsky_pulmaraton';
+			$pas = 'que5hqo8x';
+		    break;
+		    case 59://sokolov
+			$log = 'sokolovsky_ctvrmaraton';
+			$pas = 'kqo5lqou8';
+		    break;
+		    case 20://miniduatlon
+			$log = 'miniduatlon';
+			$pas = 'koQ87CqwP';
+		    break;
+		    case 44://prajzak
+			$log = 'zelezny_prajzak';
+			$pas = 'kqp4akjs4';
+		    break;
+		    case 27://prajzak
+			$log = 'bbb';
+			$pas = 'lq_4tuLwE';
+		    break;
+		    case 79://kytlice
+			$log = 'kytlicky_minitriatlon';
+			$pas = 'quelaqwmk';
+		    break;
+		    case 15://sneznica
+			$log = 'sneznicky_maraton';
+			$pas = 'kqoz54WqE';
+		    break;
+		    case 84://Knezice
+			$log = 'bike_maraton_knezice';
+			$pas = 'kQwotL74x';
+		    break;
+		    case 71://Jestrabi muž
+			$log = 'jestrabi_muz';
+			$pas = 'kqOpw4qwm';
+		    break;
+		    case 26://vetrkovice
+			$log = 'vetrkovicky_triatlon';
+			$pas = 'kezkQer5m';
+		    break;
+		    case 66://koprivnice
+			$log = 'beh_emila_zatopka';
+			$pas = 'kQwoTZ1@m';
+		    break;
+
+
+
+		}
+		
+		$log = 'skybedy';
+		$pas = 'mk1313';
+		
+		if(!isset($_SERVER['PHP_AUTH_USER'])){
+			header('WWW-Authenticate: Basic realm="TimeChip - administrace prihlasek"');
+			header('HTTP/1.0 401 Unauthorized');
+			exit;
+		}
+		else{
+			if($_SERVER['PHP_AUTH_USER'] != ($log) || $_SERVER['PHP_AUTH_PW'] != ($pas)){
+				Header("HTTP/1.1 401 Unauthorized");
+				Header("WWW-Authenticate: Basic realm=\"TimeChip - administrace prihlasek\"");
+				die("Bylo zadano spatne jmeno nebo heslo a tak to zkuste znovu, nebo nas kontaktujte na timechip@timechip.cz");
+			}
+		}
+   }
+}	
+

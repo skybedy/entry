@@ -1,0 +1,1 @@
+<p>Z technických důvodů není možné se v této chvíli přihlásit, zkuste to prosím k večeru, nebo zítra.</p>

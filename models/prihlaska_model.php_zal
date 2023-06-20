@@ -1,0 +1,770 @@
+<?php
+class Prihlaska_Model extends Model{
+   public $sqlzavody;
+	public $sqlprihlasky;
+	public $NazevZavodu;
+	public $kod_zavodu;
+	public $IdZavodu;
+	private $cislo_uctu;
+	public $udaje;
+	private $kategorie;
+	private $vs;
+	private $startovne_z_db;
+	private $startovne;
+	private $konec_prihlasek;
+	private $mena;
+	private $poradatel;
+	private $telefon_na_poradatele;
+	private $mail_na_poradatele;
+	public $mail_na_zavodnika;
+    
+	function __construct() {
+		parent::__construct();
+		Session::init();
+		$this->IdZavodu = Session::get('race_id');
+		
+	
+		
+		
+		$data = false;
+		$this->sqlzavody = 'zavody_2013';
+		
+		$sql1 = "SELECT * FROM $this->sqlzavody WHERE id_zavodu = :id_zavodu";
+		$sth = $this->db->prepare($sql1);
+		$sth->execute(array(
+            ':id_zavodu' => $this->IdZavodu
+		));
+		if($sth->rowCount()){
+			$data =  $sth->fetchAll();
+			foreach($data as $val){
+				$this->NazevZavodu = $val['nazev_zavodu'];
+				$this->kod_zavodu = $val['kod_zavodu'];
+			}
+				$this->sqlprihlasky = 'prihlasky_'.$this->kod_zavodu.'_2013';
+		}
+	}
+   
+
+	public function xhrOvereni($id_zavodu){
+		Session::set('udaje',serialize($_POST));
+		$str = false;
+		$pohlavi = Array("M" => "Muž","Z" => "Žena");
+		//if($id_zavodu == '82'){// Deza Valachiarun
+			$str .= '<table id="overeni">';
+			$str .= (isset($_POST['jmeno']) && isset($_POST['prijmeni'])) ? ('<tr><td class="align_leftleft">Jméno a příjmení</td><td class="align_right">'.$_POST['jmeno'].' '.$_POST['prijmeni'].'</td></tr>') : ('');
+			$str .= (isset($_POST['pohlavi'])) ? ('<tr><td class="align_leftleft">Pohlaví</td><td class="align_right">'.$pohlavi[$_POST['pohlavi']].'</td></tr>') : ('');
+			$str .= (isset($_POST['den_narozeni']) && isset($_POST['mesic_narozeni']) && isset($_POST['rok_narozeni'])) ? ('<tr><td class="align_leftleft">Datum narození</td><td class="align_right">'.$_POST['den_narozeni'].'.'.$_POST['mesic_narozeni'].'.'.$_POST['rok_narozeni'].'</td></tr>') : ('');
+			$str .= (isset($_POST['oddil'])) ? ('<tr><td class="align_leftleft">Tým nebo bydliště</td><td class="align_right">'.$_POST['oddil'].'</td></tr>') : ('');
+			$str .= (isset($_POST['stat'])) ? ('<tr><td class="align_leftleft">Stát</td><td class="align_right">'.$_POST['stat'].'</td></tr>') : ('');
+			$str .= (isset($_POST['velikost_tricka'])) ? ('<tr><td class="align_leftleft">Tričko</td><td class="align_right">'.$_POST['velikost_tricka'].'</td></tr>') : ('');
+			$str .= (isset($_POST['mail'])) ? ('<tr><td class="align_leftleft">E-mail</td><td class="align_right">'.$_POST['mail'].'</td></tr>') : ('');
+			$str .= (isset($_POST['telefon_1'])) ? ('<tr><td class="align_leftleft">Telefon</td><td class="align_right">'.$_POST['telefon_1'].'</td></tr>') : ('');
+			$str .= (!empty($_POST['telefon_2'])) ? ('<tr><td class="align_leftleft">Alternativní telefon</td><td class="align_right">'.$_POST['telefon_2'].'</td></tr>') : ('');
+			$str .= (!empty($_POST['vzkaz_poradateli'])) ? ('<tr><td class="align_leftleft">Vzkaz pořadateli</td><td class="align_right">'.$_POST['vzkaz_poradateli'].'</td></tr>') : ('');
+			$str .= '</table>';
+			$str .= '<form action="'.URL.'prihlaska/xhrRepair" method="post" id="opravit_udaje" class="kontrolni_tabulka">';
+			$str .= '<input type="submit" value="Opravit údaje" />&nbsp;Zvolte v případě, že údaje potřebuje opravit';
+			$str .= '</form>';
+			$str .= '<form action="'.URL.'prihlaska/xhrFinish/'.$this->IdZavodu.'" method="post" id="odeslat_prihlasku" class="kontrolni_tabulka">';
+			$str .= '<input type="submit" value="Odeslat přihlášku" />&nbsp;Zvolte v případě, že údaje jsou OK a můžete se přihlásit';
+			$str .= '</form>';
+			//echo $str;
+			return $str;
+	}
+	
+	public function xhrFinish($id_zavodu){
+		//tady ještě zkontrolovat, jestli se ty SESSIONS nedají udělat nějak jinak
+		(Session::get('udaje') == true) ? ($this->udaje = unserialize(Session::get('udaje'))) : ($this->udaje = false);
+		$this->mail_na_zavodnika = $this->udaje['mail'];
+		$str = false;
+		$sql1 = "SELECT *,DATE_FORMAT(konec_prihlasek,'%e.%c.%Y') AS konec_prihlasek FROM prihlasky_2013 WHERE id_zavodu = :id_zavodu";
+		//echo $sql1;
+		$sth1 = $this->db->prepare($sql1);
+		$sth1->execute(array(
+            ':id_zavodu' => $this->IdZavodu
+		));
+		if($sth1->rowCount()){
+			$data1 =  $sth1->fetchObject();
+			$this->cislo_uctu = $data1->cislo_uctu;
+			$this->vs = $data1->posledni_vs+1;
+			$this->startovne_z_db = $data1->startovne;
+			$this->poradatel = $data1->poradatel;
+			$this->mena = $data1->mena;
+			$this->telefon_na_poradatele = $data1->telefon;
+			$this->mail_na_poradatele = $data1->mail;
+			$this->konec_prihlasek = $data1->konec_prihlasek;
+			
+		}
+		
+		$this->Startovne($id_zavodu);
+		$this->VyberKategorie($id_zavodu);
+		$this->xhrSaveToDB($id_zavodu);
+	}
+	
+	
+	
+	
+	
+	private function xhrSaveToDB($id_zavodu){
+		$str = false;
+			$vlozeni = Array();
+  			(isset($this->udaje['jmeno'])) ? ($vlozeni['jmeno'] = $this->udaje['jmeno']) : ('');
+  			(isset($this->udaje['prijmeni'])) ? ($vlozeni['prijmeni'] = $this->udaje['prijmeni']) : ('');
+  			(isset($this->udaje['oddil'])) ? ($vlozeni['prislusnost'] = $this->udaje['oddil']) : ('');
+			(isset($this->udaje['stat'])) ? ($vlozeni['stat'] = $this->udaje['stat']) : ('');
+			if(isset($this->udaje['den_narozeni']) && isset($this->udaje['mesic_narozeni']) && isset($this->udaje['rok_narozeni'])){
+				 $vlozeni['datum_narozeni'] = $this->udaje['rok_narozeni'].'-'.$this->udaje['mesic_narozeni'].'-'.$this->udaje['den_narozeni'];
+			}
+			(isset($this->udaje['mail'])) ? ($vlozeni['mail'] = $this->udaje['mail']) : ('');
+			(isset($this->udaje['telefon_1'])) ? ($vlozeni['telefon'] = $this->udaje['telefon_1']) : ('');	
+			(isset($this->udaje['telefon_2'])) ? ($vlozeni['nahradni_telefon'] = $this->udaje['telefon_2']) : ('');	
+				
+			(isset($this->kategorie)) ? ($vlozeni['kategorie'] = $this->kategorie) : ('');	
+			(isset($this->udaje['velikost_tricka'])) ? ($vlozeni['velikost_tricka'] = $this->udaje['velikost_tricka']) : ('');	
+			(isset($this->udaje['vzkaz_poradateli'])) ? ($vlozeni['vzkaz'] = $this->udaje['vzkaz_poradateli']) : ('');
+			(isset($this->startovne)) ? ($vlozeni['startovne'] = $this->startovne) : ('');
+			(isset($this->vs)) ? ($vlozeni['vs'] = $this->vs) : ('');
+			/* v této situaci asi nelze použít připravaný dotaz, chtělo by to kouknout na bezpečnost */ 
+			$sql1 = "INSERT INTO $this->sqlprihlasky (".implode(",",array_keys($vlozeni)).") VALUES ('".implode("','",$vlozeni)."')";
+			//echo $sql1;
+			$sth1 = $this->db->prepare($sql1);
+			if($sth1->execute()){
+				$this->MailZavodnikovi($id_zavodu);
+				$this->UpdateVS($id_zavodu);
+				unset($_SESSION['udaje']);
+				unset($_POST);
+			}
+		}
+		
+		
+		public function MailZavodnikovi($id_zavodu){
+				require "./libs/phpmailer/class.phpmailer.php";
+				$mail1 = new PHPMailer();
+				$mail1->IsSMTP();
+				$mail1->Host = "smtp.webneta.cz";                                      
+				$mail1->From = "timechip@timechip.cz";
+				$mail1->FromName = "TimeChip";
+				$mail1->AddAddress($this->udaje['mail']);
+				$mail1->IsHTML(true);
+				$mail1->Subject = $this->NazevZavodu.", předběžná registrace";
+				$mail1->Body = false;
+				if($id_zavodu == 82){ //Deza Valachiarun
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno']} {$this->udaje['prijmeni']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni']}.{$this->udaje['mesic_narozeni']}.{$this->udaje['rok_narozeni']}<br />";
+					$mail1->Body .= "Velikost trička: {$this->udaje['velikost_tricka']}<br />"; 	
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= '<hr />';
+					if($this->udaje['poradi_podzavodu'] == 1){ //pouze běh na 10km
+						$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+						$mail1->Body .= '<hr />';
+					}	
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+								
+				
+				
+				
+				elseif($this->IdZavodu == 860){ //Vratislavice
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= "Startovné ve výši 100 Kč se bude hradit v rámci prezentace v den závodu.<br />";
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+				elseif($this->IdZavodu == 830){ //Odrivous
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost_1']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= '<hr />';
+					if($this->udaje['poradi_podzavodu'] < 5){
+						$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+						$mail1->Body .= '<hr />';
+					}
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+				elseif($this->IdZavodu == 850){ //Bělá
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= '<p>Platné přihlášky do 23. 5. 2013 za základní startovné 150,- Kč (do uvedeného termínu (včetně 23.5.) musí být startovné uhrazeno na účtu Prajzské Ambasády nebo musí být zaplaceny v hotovosti). Všichni, kteří se do 23. 5. (včetně) přihlásí a budou mít NEPLATNOU přihlášku, mají možnost uvést vše do pořádku a startovné neprodleně uhradit. Neplatná přihláška = chyba v údajích, neuhrazené startovné. Nebude-li úhrada, či úprava údajů provedena do 3 dnů po přihlášení a následně do 2 dnů po výzvě organizátora, bude taková to přihláška smazána.</p>';
+					$mail1->Body .= '<p>Variabilní symbol vaší platby je '.$this->vs.'</p>';
+					$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+					$mail1->Body .= '<p>Ochranná přilba je povinná. <b>Závod se jede za plného silničního provozu. Každý účastník je povinný respektovat pravidla silničního provozu. Každý se účastní na vlastní nebezpečí.</b> Podáním on-line přihlášky, případně svým podpisem na tištěné přihlášce každý závodník potvrzuje toto prohlášení:</p>'; 
+					$mail1->Body .= '<p><i>Podáním přihlášky souhlasím s výše uvedenými pravidly závodu a zúčastním se ho na vlastní nebezpečí. Seznámil(a) jsem se s bezpečnostními předpisy a pravidly silničního provozu, které se zavazuji  během závodu dodržovat. Prohlašuji, že jsem si vědom(a) toho, že nesu veškerou odpovědnost za škodu způsobenou na zdraví nebo věcech, která vznikne mně, pořadateli nebo třetím osobám před, během či po závodě. Budu dodržovat pravidla fair-play a poskytnutím pomoci druhému obětuji třeba i první místo.</i></p>';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+				elseif($this->IdZavodu == 1209){ //Hošťálkovice
+					$mail1->Body .= 'Dobrý den, díky za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= "<p>Startovné ve výši $this->startovne $this->mena se bude hradit v den startu, v rámci prezentace.</p>";
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+				elseif($this->IdZavodu == 970 || $this->IdZavodu == 920){ //zlate kolo
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost_1']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+					$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+					$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+					$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+				
+				/* 24 hod */
+				elseif($this->IdZavodu == 770 || $this->IdZavodu == 760){
+					$mena_2 = '€'; 
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					switch($this->poradi_podzavodu){
+						case 1:
+							$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+							$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil_1']}<br />";
+							$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+							$mail1->Body .= "Velikost trička: {$this->udaje['velikost_tricka_1']}<br />"; 	
+							$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+						break;
+						case 2:
+							$mail1->Body .= "Název družstva: {$this->udaje['nazev_druzstva']}<br />"; 
+							$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+							$mail1->Body .= "Závodník 1: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+							$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil_1']}<br />";
+							$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+							$mail1->Body .= "Velikost trička: {$this->udaje['velikost_tricka_1']}<br />"; 	
+							$mail1->Body .= "Závodník 2: {$this->udaje['jmeno_2']} {$this->udaje['prijmeni_2']}<br />"; 
+							$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil_2']}<br />";
+							$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_2']}.{$this->udaje['mesic_narozeni_2']}.{$this->udaje['rok_narozeni_2']}<br />";
+							$mail1->Body .= "Velikost trička: {$this->udaje['velikost_tricka_2']}<br />"; 	
+						break;
+						case 3;
+							$mail1->Body .= "Název družstva: {$this->udaje['nazev_druzstva']}<br />"; 
+							$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+							$mail1->Body .= "Závodník 1: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+							$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil_1']}<br />";
+							$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+							$mail1->Body .= "Velikost trička: {$this->udaje['velikost_tricka_1']}<br />"; 	
+							$mail1->Body .= "Závodník 2: {$this->udaje['jmeno_2']} {$this->udaje['prijmeni_2']}<br />"; 
+							$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil_2']}<br />";
+							$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_2']}.{$this->udaje['mesic_narozeni_2']}.{$this->udaje['rok_narozeni_2']}<br />";
+							$mail1->Body .= "Velikost trička: {$this->udaje['velikost_tricka_2']}<br />"; 	
+							$mail1->Body .= "Závodník 3: {$this->udaje['jmeno_3']} {$this->udaje['prijmeni_3']}<br />"; 
+							$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil_3']}<br />";
+							$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_3']}.{$this->udaje['mesic_narozeni_3']}.{$this->udaje['rok_narozeni_3']}<br />";
+							$mail1->Body .= "Velikost trička: {$this->udaje['velikost_tricka_3']}<br />"; 	
+							$mail1->Body .= "Závodník 4: {$this->udaje['jmeno_4']} {$this->udaje['prijmeni_4']}<br />"; 
+							$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil_4']}<br />";
+							$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_4']}.{$this->udaje['mesic_narozeni_4']}.{$this->udaje['rok_narozeni_4']}<br />";
+							$mail1->Body .= "Velikost trička: {$this->udaje['velikost_tricka_4']}<br />"; 	
+						break;	
+					}
+					$mail1->Body .= '<hr />';
+					
+					
+					$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+					if($this->IdZavodu == 760){
+						$mail1->Body .= 'Částka (€):'.$this->startovne_2.'<br />';
+					}
+					$mail1->Body .= 'Částka (Kč): '.$this->startovne.'<br />';
+					$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+					if($this->IdZavodu == 707){
+							$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+					}
+					elseif($this->IdZavodu == 760){
+						$mail1->Body .= 'Číslo účtu EUR: FIO BANKA 2500323534/8330<br />';
+						$mail1->Body .= 'Číslo účtu CZK: FIO BANKA 2500323534/2010<br />';
+					}
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+				elseif($this->IdZavodu == 960){//bb
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost_1']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= '<hr />';
+					if($this->udaje['poradi_podzavodu'] == 3){
+						$mail1->Body .= "Startovné ve výši 100 Kč je splatné při prezentaci v den závodu.";
+					}
+					else{
+						$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+					}
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+				
+				elseif($this->IdZavodu == 950){//valachiarun vsetin
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost_1']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= '<hr />';
+					if($this->udaje['poradi_podzavodu'] == 4){
+						$mail1->Body .= "Díky podpoře hlavního partnera mini běhů společnosti Austin Detonator s.r.o. jsme mohli pro tento závod zrušit startovné a poběžíte ZDARMA.";
+					}
+					else{
+						$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+					}
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+				elseif($this->IdZavodu == 380){//zelezny prajzak
+					if($this->udaje['poradi_podzavodu'] == 1){
+						$this->NazevZavodu = $this->NazevZavodu;
+					}
+					else{
+						$this->NazevZavodu = 'Železný Prajzáček';
+					}
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' 2013.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost_1']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= '<hr />';
+					if($this->udaje['poradi_podzavodu'] == 1){
+						$mail1->Body .= 'Startovné prosím uhraďte do 4 pracovních dnů od registrace. Pokud tak neučiníte, budete automaticky vymazáni ze startovní listiny a uvolníte tak místo vážnému zájemci.<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+					}
+					else{
+						$mail1->Body .= 'Startovné prosím uhraďte do 4 pracovních dnů od registrace. Pokud tak neučiníte, budete automaticky vymazáni ze startovní listiny a uvolníte tak místo vážnému zájemci.<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+					}
+					$mail1->Body .= '<hr />';
+					if($this->udaje['poradi_podzavodu'] == 1){
+						$mail1->Body .= 'Pro jistotu ještě jednou uvádíme základní informace o závodu:<br />';
+						$mail1->Body .= 'Datum konání: 13.7.2013<br />';
+						$mail1->Body .= 'Prezentace:<br />';
+						$mail1->Body .= 'V pátek 12.7.2013 od 17:00 do 19:00 hodin na nádvoří zámku v Dolním Benešově.<br />';
+						$mail1->Body .= 'V sobotu 13.7.2013 od 9:00 do 12:00 hodin na nádvoří zámku v Dolním Benešově.<br />';
+						$mail1->Body .= 'Časový rozpis:<br />';					
+						$mail1->Body .= '12:20 - závodníci se hromadně přesunou ze zámku ke štěrkovně, kde je místo startu.<br />';
+						$mail1->Body .= '13:00 - start 1.vlny<br />';
+						$mail1->Body .= '13:15 - start 2.vlny<br />';
+						$mail1->Body .= '17:30 - vyhlášení výsledků<br />';
+						$mail1->Body .= '<hr />';
+					}
+					else{
+						$mail1->Body .= 'Časový rozpis:<br />';					
+						$mail1->Body .= '16:15 – rozprava (hromadné projetí tratě)<br />';
+						$mail1->Body .= '16:30 - start 1.vlny<br />';
+						$mail1->Body .= '16:50 - start 2.vlny<br />';
+						$mail1->Body .= '<hr />';
+					}
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+				}
+				
+				elseif($this->IdZavodu == 1050){ //kytlice
+					if($this->udaje['poradi_podzavodu'] == 1){
+						$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'Vaše údaje jsou:<br />';
+						$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+						$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost_1']}<br />";
+						$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+						$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= $this->poradatel.'<br />';
+						$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+						$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+						$mail1->Body .= '<hr />';
+					}
+					else{
+						$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'Vaše údaje jsou:<br />';
+						$mail1->Body .= "Název družstva: {$this->udaje['nazev_druzstva']}<br />"; 
+						$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost_1']}<br />";
+						$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= $this->poradatel.'<br />';
+						$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+						$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+						$mail1->Body .= '<hr />';
+
+					}
+				}
+				
+				
+			elseif($this->IdZavodu == 50){ //miniduatlon
+
+						$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'Vaše údaje jsou:<br />';
+						$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+						$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost_1']}<br />";
+						$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+						$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= $this->poradatel.'<br />';
+						$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+						$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+						$mail1->Body .= '<hr />';
+				}
+				elseif($this->IdZavodu == 250 || $this->IdZavodu == 840){ //vetrkovice,rychleby
+						$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'Vaše údaje jsou:<br />';
+						$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+						$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['prislusnost_1']}<br />";
+						$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+						$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= $this->poradatel.'<br />';
+						$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+						$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+						$mail1->Body .= '<hr />';
+				}
+				elseif($this->IdZavodu == 1180){ //Dunajská
+						$mail1->Body .= 'Dobrý deň, ďakujeme za vašu registráciu na ŽITNOOSTROVSKÝ POL MARATÓN  / Jó napot, köszönjük jelentkezését a Csallóközi félmaratonra<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'Vaše údaje sú / Az Ön adatai:<br />';
+						$mail1->Body .= "Meno a priezvisko / Keresztnév és vezetéknév: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+						$mail1->Body .= "Tím alebo bydlisko / Csapat vagy lakhely: {$this->udaje['prislusnost_1']}<br />";
+						$mail1->Body .= "Dátum narodenia / Születési dátum:  {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+						$mail1->Body .= "Telefón / Telefonszám:   {$this->udaje['telefon_1']}<br />";
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'V prípade, že budete chcieť využiť zvýhodnené štartovné, je nutné do  '.$this->konec_prihlasek.' zrealizovať platbu podľa nasledujúcich údajov:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'Amennyiben kedvezményes részvételi díjjal szeretne nevezni, kérjük utalja el azt számlánkra '.$this->konec_prihlasek.'-ig a következő adatok alapján:<br />';
+						$mail1->Body .= 'Számlaszám:  '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Összeg: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Utalási azonosító: '.$this->vs.'<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= $this->poradatel.'<br />';
+						$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+						$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+						$mail1->Body .= '<hr />';
+				}
+				
+					elseif($this->IdZavodu == 1280){ //Šprintpolom
+						$mail1->Body .= 'Dobrý deň, ďakujeme za vašu registráciu na '.$this->NazevZavodu.'.<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'Vaše údaje sú:<br />';
+						$mail1->Body .= "Meno a priezvisko: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+						$mail1->Body .= "Tím alebo bydlisko: {$this->udaje['prislusnost_1']}<br />";
+						$mail1->Body .= "Dátum narodenia:  {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+						$mail1->Body .= "Telefón:   {$this->udaje['telefon_1']}<br />";
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'V prípade, že budete chcieť využiť zvýhodnené štartovné, je nutné do  '.$this->konec_prihlasek.' zrealizovať platbu podľa nasledujúcich údajov:<br />';
+						$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+						$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+						$mail1->Body .= 'Variabilný symbol: '.$this->vs.'<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= $this->poradatel.'<br />';
+						$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+						$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+						$mail1->Body .= '<hr />';
+				}
+					elseif($this->IdZavodu == 1310){ //Raková
+						$mail1->Body .= 'Dobrý deň, ďakujeme za vašu registráciu na '.$this->NazevZavodu.'.<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'Vaše údaje sú:<br />';
+						$mail1->Body .= "Meno a priezvisko: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+						$mail1->Body .= "Tím alebo bydlisko: {$this->udaje['prislusnost_1']}<br />";
+						$mail1->Body .= "Dátum narodenia:  {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+						$mail1->Body .= "Telefón:   {$this->udaje['telefon_1']}<br />";
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'V pripadě akýchkoľvek otázok nás neváhajtě kontaktovať.<br />';
+						$mail1->Body .= $this->poradatel.'<br />';
+						$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+						$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+						$mail1->Body .= '<hr />';
+				}
+				
+
+				elseif($this->IdZavodu == 1240){ //kosice
+						$mail1->Body .= 'Gratulujeme, práve ste sa úspešne zaregistrovali na preteky na '.$this->NazevZavodu.'  / Gratulálunk, nevezés az 1. Kassai aquatlonra.<br />';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= 'Vaše údaje sú / Az Ön adatai:<br />';
+						$mail1->Body .= "Meno a priezvisko / Keresztnév és vezetéknév: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+						$mail1->Body .= "Tím alebo bydlisko / Csapat vagy lakhely: {$this->udaje['prislusnost_1']}<br />";
+						$mail1->Body .= "Dátum narodenia / Születési dátum:  {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+						$mail1->Body .= "Telefón / Telefonszám:   {$this->udaje['telefon_1']}<br />";
+						$mail1->Body .= "Kategorie / Category:   {$this->kategorie}<br />";
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= ' Štartovné sa hradí pri prezentácii /  Nevezési díj a helyszínen fizetendő.';
+						$mail1->Body .= '<hr />';
+						$mail1->Body .= $this->poradatel.'<br />';
+						$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+						$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+						$mail1->Body .= '<hr />';
+				}
+				
+				
+				
+				else{ //default
+					$mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'Vaše údaje jsou:<br />';
+					$mail1->Body .= "Jméno a příjmení: {$this->udaje['jmeno_1']} {$this->udaje['prijmeni_1']}<br />"; 
+					$mail1->Body .= "Oddíl nebo místo bydliště: {$this->udaje['oddil']}<br />";
+					$mail1->Body .= "Datum narození: {$this->udaje['den_narozeni_1']}.{$this->udaje['mesic_narozeni_1']}.{$this->udaje['rok_narozeni_1']}<br />";
+					$mail1->Body .= "Telefon: {$this->udaje['telefon_1']}<br />";
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= 'V případě, že budete chtít využít zvýhodněné startovné, je nutné do '.$this->konec_prihlasek.' realizovat platbu podle následujících údajů:<br />';
+					$mail1->Body .= 'Číslo účtu: '.$this->cislo_uctu.'<br />';
+					$mail1->Body .= 'Částka: '.$this->startovne.$this->mena.'<br />';
+					$mail1->Body .= 'Variabilní symbol: '.$this->vs.'<br />';
+					$mail1->Body .= '<hr />';
+					$mail1->Body .= $this->poradatel.'<br />';
+					$mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+					$mail1->Body .= 'Tel: '.$this->telefon_na_poradatele;
+					$mail1->Body .= '<hr />';
+					
+				}
+
+				if(!$mail1->Send()){
+					echo "<p>Vznikl nějaký problém a zpráva nebyla odeslána. Pokud můžete, kontaktujte nás prosím buď telefonicky na 776131313, nebo pomocí e-mailu na adresu <a href=\"mailto:timechip@timechip.cz\">timechip@timechip.cz</a>.</p>";
+					exit;
+				}
+			}		
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private function VyberKategorie($id_zavodu){
+		 
+		$sthis->kategorie = false;
+		$vek = date('Y') - $this->udaje['rok_narozeni'];
+		if($id_zavodu == 82){ //Deza Valachiarun
+			
+			if($this->udaje['poradi_podzavodu'] == 2){ // Běh 2km
+				$pohlavi = 'B';
+				}
+			else{
+				$pohlavi = $this->udaje['pohlavi'];
+				}
+			
+			$sql = "SELECT * FROM kategorie_2013 WHERE id_zavodu = :id_zavodu AND poradi_podzavodu = :poradi_podzavodu AND pohlavi = :pohlavi AND :vek BETWEEN vek_start AND vek_konec";
+		
+			//echo $sql;
+			$sth = $this->db->prepare($sql);
+			$sth->execute(Array(
+				 ':id_zavodu' => $this->IdZavodu, ':poradi_podzavodu' => $this->udaje['poradi_podzavodu'],':pohlavi' => $pohlavi,':vek' => $vek
+			));
+			if($sth->rowCount()){
+				$data1 =  $sth->fetchObject();
+				$this->kategorie = $data1->nazev_k;
+			}
+		} 
+		
+	}
+	
+	
+	
+	private function Startovne($id_zavodu){
+		if($id_zavodu == 82){ //Deza Valachiarun
+			switch($this->udaje['poradi_podzavodu']){
+				case 1;
+					$this->startovne = $this->startovne_z_db;
+				break;
+				case 2;
+					$this->startovne = 0;
+				break;
+				case 3:
+					$this->startovne = 0;
+				break;
+				default:
+					$this->startovne = $this->startovne_z_db;
+			}
+		}
+	}
+		
+	private function UpdateVS($id_zavodu){
+		$sql = "UPDATE prihlasky_2013 SET posledni_vs = '$this->vs' WHERE id_zavodu = :id_zavodu";
+		//echo $sql;
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array(
+			 ':id_zavodu' => $id_zavodu
+		));
+		
+	}
+	
+	
+	
+	
+	
+	public function VypisPrihlasek(){
+		$str = false;
+		$sql = "SELECT *,DATE_FORMAT(datum_narozeni,'%Y') AS rocnik FROM $this->sqlprihlasky ORDER BY zaplaceno";
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		if($sth->rowCount()){
+				$i = 1;
+				$str .= '<tr class="hlavicka">';
+				$str .= '<td>Příjmení a jméno</td>';
+				$str .= '<td>Tým nebo bydliště</td>';
+				$str .= '<td>Ročník</td>';
+				$str .= '<td>Stát</td>';
+				$str .= '<td>Kategorie</td>';
+				$str .= '<td>Startovné</td>';
+				$str .= '</tr>';
+				while($val = $sth->fetchObject()){
+					$str .= '<tr class="'.$this->Radkovani($i).'">';
+					$str .= '<td>'.$val->prijmeni.' '.$val->jmeno.'</td>';
+					$str .= '<td>'.$val->prislusnost.'</td>';
+					$str .= '<td>'.$val->rocnik.'</td>';
+					
+					$str .= '<td class="align_center">'.$val->stat.'</td>';
+					$str .= '<td>'.$val->kategorie.'</td>';
+					$str .= '<td>'.$val->zaplaceno.'</td>';
+				
+			
+					
+					
+					
+					
+					
+					
+					
+					
+					$str .= '</tr>';
+					$i++;
+				}
+		}
+		return $str;
+		
+		
+	}
+	
+	
+	
+	public function Radkovani($i){
+		(fmod($i,2) == 0) ? ($radek = "sudy") : ($radek = "lichy");
+		return $radek;
+	
+	}
+	
+	
+	
+	
+	
+
+	
+	 
+	
+	
+} 
+?>

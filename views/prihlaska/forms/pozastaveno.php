@@ -1,0 +1,1 @@
+<p>Z důvodu naplnění limitu závodníků bylo přihlašování ukončeno/p>

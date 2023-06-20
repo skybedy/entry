@@ -1,0 +1,1 @@
+<p>Registrace prostřednictvím Internetu bylo ukončena. Na závod bude bude možné přihlásit se už pouze v den závodu přímo na místě.</p>

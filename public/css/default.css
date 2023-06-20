@@ -1,0 +1,274 @@
+*{
+	margin:0;
+	padding:0;
+}
+html,body{
+  font-family: Tahoma, Arial, sans-serif;
+  font-size:1em;
+  background:#FBFBFB;
+}
+h1{
+  font-size:18px;
+  padding:10px 0;
+  color:#FF9933;
+  text-decoration:underline;
+}
+h3{
+  font-size:14px;
+  color:#444444;
+}
+h4{
+  margin-top:30px;
+  color:#6699FF;
+}
+
+
+input,select,textarea{
+  font-family: Tahoma, Arial, sans-serif;
+  font-size:1em;
+}
+.float_left{float:left}
+.float_right{float:right}
+.align_left{text-align:left}
+.align_center{text-align:center;width:auto}
+.align_right{text-align:right}
+.noborder{border:none!Important;}
+.last{margin:0!Important;}
+.cf:after{
+  content:".";
+  display:block;
+  clear:both;
+  visibility:hidden;
+  line-height:0;
+  height:0;
+}
+.cf{display:inline-block}
+html[xmlns] .cf{display:block}
+* html .cf{height: 1%}
+/* konec oficialit */
+
+#top_bar{
+  padding:0 0 0 6px;
+  position:relative;
+  height:46px;
+  background: #4c4c4c; /* Old browsers */
+  background: -moz-linear-gradient(top,  #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4c4c4c), color-stop(12%,#595959), color-stop(25%,#666666), color-stop(39%,#474747), color-stop(50%,#2c2c2c), color-stop(51%,#000000), color-stop(60%,#111111), color-stop(76%,#2b2b2b), color-stop(91%,#1c1c1c), color-stop(100%,#131313)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 ); /* IE6-9 */
+}
+#span_vyber_zavodu{
+  color:yellow;
+  font-size:0.9em;
+}
+
+
+#logo{
+  width:173px;height:45px;
+  display:block;
+  position:absolute;
+  top:2px;right:10px;
+  text-decoration:none;
+  border:none;
+  overflow:hidden;
+}
+#logo span{
+  width:173px;height:45px;
+  background:transparent url(../images/logo_entry_admin.png) no-repeat left top;
+  position:absolute;
+  top:0;left:0;
+  z-index:1;
+  cursor:pointer;
+}
+#menu{
+  height:46px;
+  list-style-type:none;
+  float:left;
+}
+#menu li{
+  position:relative;
+  float:left;
+}
+#menu li a,#menu li span{
+  display:block;
+  padding:0 16px;
+  line-height:46px;
+  text-decoration:none;
+  font-size:0.9em;
+  color:white;
+}
+#menu li a:hover{
+ background:white;
+ color:#222222;
+}
+#menu li span{
+  color:#BBBBBB;
+}
+#race_id{
+    margin:12px 0 0 20px;
+    font-size:14px;
+    color:#00000;
+}
+.vypis_prihlasek{
+  font-size:14px;
+  color:#373737;
+  width:100%;
+  border:1px solid gray;
+  border-collapse:collapse;
+}
+.vypis_prihlasek td{
+  padding:2px 4px;
+  border:1px solid gray;
+}
+
+.vypis_prihlasek input,.vypis_prihlasek select{
+  font-size:14px;
+}
+
+
+.vypis_prihlasek .hlavicka,.vypis_prihlasek_tymy .hlavicka{background:#444444;color:white}
+.vypis_prihlasek .lichy{background:white}
+.vypis_prihlasek .sudy{background:#F3F3F3}
+.vypis_prihlasek .submit{
+  padding:0 10px;
+}
+#fieldset_prihlasovaci_formular{
+  margin:0 20px 0 0;
+  padding:20px;
+  float:left;
+  background:white;
+  border:1px dashed gray;
+}
+
+
+#prihlasovaci_formular{
+  margin:10px 0;
+  color:#538BFF;
+
+}
+#prihlasovaci_formular input,#prihlasovaci_formular select,#prihlasovaci_formular textarea,.kontrolni_tabulka input{
+  margin:5px 0 0 0;
+  padding:3px 3px;
+  border:1px solid #CDCDCD;
+  color:#616161;
+}
+
+#prihlasovaci_formular a{
+  color:#339933;
+}
+.kontrolni_tabulka .submit{
+  width:130px;
+}
+.kontrolni_tabulka label{color:red}
+#vyber_zavodu{
+  padding:10px;
+  border:1px solid #7F9DB8;
+}
+#content{
+  padding:10px 20px;
+}
+label.error{
+  margin:2px 0 0 10px;
+  color:#FF3333;
+  text-decoration: underline;
+  font-size:12px;
+  font-weight:bold;
+}
+#overeni{width:20%}
+
+#overeni td{
+   padding:3px 2px;
+   background:#EEEEEE;
+   color:#222222;
+}
+#zakladni_udaje td{
+    padding:0 5px;
+}
+#zakladni_udaje a{
+  color:#339933;
+}
+#reklamy{
+  margin:10px 0 0 40px;
+  width:200px;
+  float:left;
+}
+.reklama{margin:0 0 40px 0}
+
+
+.reklama .nadpis{
+   font-weight:bold;
+}
+.reklama .obsah{
+  margin:5px 0 0 0;
+  font-size:15px;
+  line-height:120%;
+}
+.reklama .link{
+  color:green;
+    font-size:15px;
+}
+
+
+
+
+
+#reklama{
+  width:480px;
+  margin:0 0 5px 0;
+  padding:6px 10px 33px 10px;
+  background:#FFFFF2;
+  border:1px dashed gray;
+  height:593px;
+}
+#reklama img{
+  border:none;
+}
+
+
+.size_30{
+  width:30px;
+}
+.size_100{
+  width:100px;
+}
+.size_150{
+  width:150px;
+}
+.size_200{
+  width:200px;
+}
+.size_220{
+  width:220px;
+}
+.size_250{
+  width:250px;
+}
+#left{float:left}
+#right{
+  margin:0 0 0 50px;
+  float:left
+  }
+
+.kontrola_udaju_ul{
+  margin:10px 0;
+  padding:10px;
+  line-height:25px;
+  list-style-type:none;
+  font-weight:bold;
+  color:red;
+}
+td{
+  vertical-align: middle!Important;
+}
+
+
+.table-condensed>thead>tr>th, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>tbody>tr>td, .table-condensed>tfoot>tr>td{
+    padding: 1px;
+}
+
+.color-red{
+    color:red!Important;
+}

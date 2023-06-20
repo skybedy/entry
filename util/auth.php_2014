@@ -1,0 +1,104 @@
+<?php
+
+class Auth{
+	
+	public function __construct(){
+	    
+		$log = 'skybedy';
+		$pas = 'mk1313life';
+		$id_zavodu = Session::get('race_id');
+		switch($id_zavodu){
+			case 69://valachiarun přerov
+				$log = 'valachiarun';
+				$pas = 'kg5L_aqG1';
+			break;
+			case 26://valachiarun vsetin
+				$log = 'valachiarun';
+				$pas = 'kg5L_aqG1';
+			break;
+			case 5://belsky_okruh
+				$log = 'belsky_okruh';
+				$pas = '5auWePoY5';
+			break;
+			case 3://žilina 12h
+				$log = 'bikepoint13';
+				$pas = '0948777670';
+			break;
+			case 2://žilina 24h
+				$log = 'bikepoint13';
+				$pas = '0948777670';
+			break;
+			case 18://Kunovice
+				$log = 'miniduatlon';
+				$pas = 'KwPoqbaP7';
+			break;
+			case 51://sokolov
+				$log = 'makroinvest';
+				$pas = 'kwEr8Kqli';
+			break;
+			case 36://bbl
+				$log = 'bbl';
+				$pas = 'kWrUqpMdq';
+			break;
+			case 19://prajzak
+				$log = 'zelezny_prajzak';
+				$pas = 'kqUwnV5Aq';
+			break;
+			case 4://odrivous
+				$log = 'odrivousuv_pohar';
+				$pas = 'koqw45kqo';
+			break;
+			case 50://odrivous
+				$log = 'duatlon_skuhrov';
+				$pas = 'kwUq4Iqy8';
+			break;
+			case 60://odrivous
+				$log = 'kytlicky_minitriatlon';
+				$pas = 'quelaqwmk';
+			break;
+			case 11://bystřička
+				$log = 'bystricka';
+				$pas = 'kwz4qkeiz';
+			break;
+			case 61://majetin
+				$log = 'majetin';
+				$pas = 'kQw1_he4e';
+			break;
+			case 64:
+				$log = 'varnsdorfsky_triatlon';
+				$pas = 'kweio65wmk';
+			break;
+			case 70:
+				$log = 'vetrkovicky_triatlon';
+				$pas = 'kweqpoemk';
+			break;
+			case 42:
+				$log = '24_hodin_mtbike_jam';
+				$pas = 'kW4_45qmI';
+			break;
+			case 76:
+				$log = 'hostalkovice';
+				$pas = 'kwoq5qwCp';
+			break;
+
+
+
+
+		}
+		
+		
+		if(!isset($_SERVER['PHP_AUTH_USER'])){
+			header('WWW-Authenticate: Basic realm="TimeChip - administrace prihlasek"');
+			header('HTTP/1.0 401 Unauthorized');
+			exit;
+		}
+		else{
+			if($_SERVER['PHP_AUTH_USER'] != $log || $_SERVER['PHP_AUTH_PW'] != $pas){
+				Header("HTTP/1.1 401 Unauthorized");
+				Header("WWW-Authenticate: Basic realm=\"TimeChip - administrace prihlasek\"");
+				die("Bylo zadano spatne jmeno nebo heslo a tak to zkuste znovu, nebo nas kontaktujte na timechip@timechip.cz");
+			}
+		}
+   }
+}	
+

@@ -1,0 +1,4 @@
+Chatka 3;10
+Chatka 2;8
+Budova 3;3
+Budova 5;5
