@@ -1023,6 +1023,17 @@ na +420 776131313.';
         $mail1 = new PHPMailer();
         $mail1->IsSMTP();
         $mail1->Host = SMTP;
+
+
+		//$mail1->Host = 'smtp.gmail.com';                       // Specifikovat hlavní a záložní SMTP servery
+		//$mail1->SMTPAuth = true;                               // Zapnout SMTP autentizaci
+		//$mail1->Username = 'timechip.cz@gmail.com';              // Váš e-mail na Gmailu
+		//$mail1->Password = '2004timechip2020secret';                        // Vaše heslo na Gmailu
+		//$mail1->SMTPSecure = 'tls';                            // Povolit TLS šifrování, `ssl` také akceptováno, ale 'tls' je doporučeno
+		//$mail1->Port = 587; 
+
+
+
         $mail1->CharSet = 'UTF-8';
         $mail1->addReplyTo($this->mail_na_poradatele);
         $mail1->setFrom('info@timechip.cz', 'TimeChip');
@@ -1034,6 +1045,13 @@ na +420 776131313.';
         }
         $mail1->IsHTML(true);
 
+
+
+
+
+
+
+
         //tohle na podzim 2017 nejak blblo, kdy tam je diarkitika, neposilalo to prdemet, je treba si s tim pohrat
 
 
@@ -1042,7 +1060,7 @@ na +420 776131313.';
 
         $mail1->Body = "";
 
-        if($this->IdZavodu == 6){//Cross Country Open
+        if($this->IdZavodu == 600){//Cross Country Open
             $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.' '.YEAR.'.<br />';
             $mail1->Body .= '<hr />';
             $mail1->Body .= 'Vaše údaje jsou:<br />';
@@ -1059,7 +1077,7 @@ na +420 776131313.';
 
 
 
-       elseif($this->IdZavodu == 1){ // sikland winter
+       elseif($this->IdZavodu == 10000 ){ // sikland winter
             $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k závodu '.$this->NazevZavodu.'.<br />';
             $mail1->Body .= '<hr />';
             $mail1->Body .= 'Částka: '.$this->vychozi_startovne.' Kč<br />';
@@ -1078,7 +1096,23 @@ na +420 776131313.';
             $mail1->Body .= '<hr />';
         }
 			
-		elseif($this->IdZavodu == 9){ //hOBBY
+		elseif($this->IdZavodu == 30){ //krakonos
+            $mail1->Body .= 'Dobrý den, děkujeme za přihlášku k seriálu '.$this->NazevZavodu.'.<br />';
+            $mail1->Body .= '<hr />';
+            /*
+            $mail1->Body .= 'Pro závodníky ze Slovenska';
+            $mail1->Body .= 'Banka: Tatrabanka<br />';   
+            $mail1->Body .= 'Číslo účtu: SKG7 1100 0000 0026 1918 7672<br />';
+            $mail1->Body .= '<hr />';	*/		
+            $mail1->Body .= $this->poradatel.'<br />';
+            $mail1->Body .= 'E-mail: <a href="mailto:'.$this->mail_na_poradatele.'">'.$this->mail_na_poradatele.'</a><br />';
+            $mail1->Body .= '<hr />';
+        }
+
+
+
+
+		elseif($this->IdZavodu == 90000){ //hOBBY
 				$mail1->Body .= "Dobrý den, děkujeme za přihlášku k závodu $this->NazevZavodu $this->RokZavodu<br />";
 				$mail1->Body .= '<hr />';
 				$mail1->Body .= 'Vaše údaje jsou:<br />';
@@ -1142,7 +1176,7 @@ na +420 776131313.';
 			$this->kategorie = $this->udaje['id_kategorie']; //sikland winter race
 		}
 
-		if($this->IdZavodu == 9){ //hobby
+		elseif($this->IdZavodu == 9){ //hobby
 			if(isset($this->udaje["open"])){
 				$this->VyberKategorieOpen($this->udaje['poradi_podzavodu']);
 			}
@@ -1778,6 +1812,72 @@ na +420 776131313.';
 
 			    }
 			}
+
+			elseif($racer_type == 7){
+			    $sql1 = "SELECT $this->sqlprihlaskytymy.*,$this->sqlkategorie.nazev_k AS nazev_kategorie,$this->sqlkategorie.id_kategorie FROM $this->sqlprihlaskytymy,$this->sqlkategorie WHERE $this->sqlprihlaskytymy.id_zavodu = :id_zavodu AND $this->sqlprihlaskytymy.id_kategorie = $this->sqlkategorie.id_kategorie AND $this->sqlprihlaskytymy.poradi_podzavodu = :poradi_podzavodu ORDER BY ids ASC";
+			    $sth1 = $this->db->prepare($sql1);
+			    $sth1->execute(Array(':id_zavodu' => $this->IdZavodu ,':poradi_podzavodu' => $i));
+			    if($sth1->rowCount()){
+				if($this->pocet_podzavodu > 1){
+				    $str .= '<h3>'.$dbdata1->nazev_podzavodu.'</h3>';
+				}
+				$str .= '<table class="table table-condensed">';
+				$str .= '<thead>';
+				$str .= '<th class="text-center">#</th>';
+				$str .= '<th>Název týmu</th>';
+				$str .= '<th>Kategorie</th>';
+				$str .= '<th>Členové</th>';
+				//$str .= '<th class="text-center">Ročník</th>';
+				$str .= '<th class="text-center">Stát</th>';
+				$str .= '</thead>';
+				$k = 1;
+				while($dbdata1 = $sth1->fetchObject()){
+				    $sql2 = "SELECT *,DATE_FORMAT(datum_narozeni,'%Y') AS rocnik FROM $this->sqlprihlaskyjednotlivci WHERE id_prihlasky_tymu = :id_prihlasky_tymu ORDER BY id_prihlasky ASC";
+				    //echo $sql2."<br />";
+				    $sth2 = $this->db->prepare($sql2);
+				    $sth2->execute(Array(':id_prihlasky_tymu' => $dbdata1->id_prihlasky));
+				    if($sth2->rowCount()){
+					$pocet_clenu = $sth2->rowCount();
+					$x = 1;
+					while($dbdata2 = $sth2->fetchObject()){
+					    if($x == 1){
+						$str .= '<tr>';
+						//if($dbdata1->ids == null)
+						//{
+						//	$str .= '<td rowspan="'.$pocet_clenu.'" class="text-center rowspan">'.$dbdata1->telefon_1.'</td>';
+						//}
+						//else{
+						//	$str .= '<td rowspan="'.$pocet_clenu.'" class="text-center rowspan">'.$dbdata1->ids.'</td>';
+						//}
+						$str .= '<td rowspan="'.$pocet_clenu.'" class="text-center rowspan">'.$dbdata1->ids.'</td>';
+						
+						$str .= '<td rowspan="'.$pocet_clenu.'" class="rowspan">'.$dbdata1->nazev_tymu.'</td>';
+						$str .= '<td rowspan="'.$pocet_clenu.'" class="rowspan">'.$dbdata1->nazev_kategorie.'</td>';
+						$str .= '<td>'.$dbdata2->prijmeni_1.' '.$dbdata2->jmeno_1.'</td>';
+						//$str .= '<td class="text-center">'.$dbdata2->rocnik.'</td>';
+						$str .= '<td class="text-center">'.$dbdata2->stat.'</td>';
+						$str .= '</tr>';
+
+					    }
+					    else{
+						$str .= '<tr>';
+						$str .= '<td>'.$dbdata2->prijmeni_1.' '.$dbdata2->jmeno_1.'</td>';
+						//$str .= '<td class="text-center">'.$dbdata2->rocnik.'</td>';
+						$str .= '<td class="text-center">'.$dbdata2->stat.'</td>';
+						$str .= '</tr>';
+					    }
+					
+					$x++;    
+					}
+				    }
+				    $k++;
+				}
+
+			    $str .= '</table><br /><br />';
+
+			    }
+			}
+
 		    }
 		}
 	    }

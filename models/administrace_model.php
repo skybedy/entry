@@ -50,7 +50,7 @@ class Administrace_Model extends Model{
 		    if($dbdata1->typ_zavodnika == 1){
 			$str['jednotlivci'] = $this->AdministraceJednotlivci();
 		    }
-		    if($dbdata1->typ_zavodnika == 2 || $dbdata1->typ_zavodnika == 3 ||  $dbdata1->typ_zavodnika == 4 || $dbdata1->typ_zavodnika == 6 ){
+		    if($dbdata1->typ_zavodnika == 2 || $dbdata1->typ_zavodnika == 3 ||  $dbdata1->typ_zavodnika == 4 || $dbdata1->typ_zavodnika == 6 || $dbdata1->typ_zavodnika == 7){
 			$str['tymy'] = $this->Administracetymy();
 		    }
 		}
@@ -64,7 +64,7 @@ class Administrace_Model extends Model{
 	    $sql1 = "SELECT $this->sqlprihlaskytymy.*,$this->sqlvs.*,$this->sqlkategorie.nazev_k AS nazev_kategorie FROM $this->sqlprihlaskytymy,$this->sqlvs,$this->sqlkategorie "
 		      . "WHERE "
 		      . "$this->sqlprihlaskytymy.id_zavodu = $this->IdZavodu AND "
-		      . "$this->sqlvs.typ_prihlasky = 2 AND "
+		      . "($this->sqlvs.typ_prihlasky = 2 OR $this->sqlvs.typ_prihlasky = 7) AND "
 		      . "$this->sqlvs.id_prihlasky = $this->sqlprihlaskytymy.id_prihlasky AND "
 		      . "$this->sqlkategorie.id_kategorie = $this->sqlprihlaskytymy.id_kategorie  "
 		. "ORDER BY $this->sqlvs.vs ASC";
@@ -396,7 +396,7 @@ class Administrace_Model extends Model{
                     
                     
                     
-		}
+			}
 	    }
 	    elseif($_POST['typ_prihlasky'] == 5){ //pouze KORUNA Beskyd
 		if(isset($_POST['delete'])){

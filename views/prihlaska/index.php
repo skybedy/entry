@@ -389,8 +389,9 @@
 							echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://timechip.cz/registrace/welzluv-kvadriatlon/2023/5">ZDE.</a></p>';
 						break;
 						case 10:  //nachod
-							echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://nachodska24hoursmtb.cz">ZDE.</a></p>';
-						break;
+							//echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="http://nachodska24hoursmtb.cz">ZDE.</a></p>';
+							require 'forms/senov.php';
+							break;
 						case 15:  //nachod
 							echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://www.zatopkuvbeh.cz/registrace">ZDE.</a></p>';
 						break;
@@ -400,6 +401,24 @@
 						case 17;  //vetrkovice
 							echo '<p>Na tento závod je možné přihlásit se pouze <a style="text-decoration: underline" href="https://timechip.cz/registrace/vetrkovicky-triatlon/2023/17">ZDE.</a></p>';
 						break;
+						case 18;  //zubri
+							//require 'forms/zubri.php';
+							require 'forms/konec_prihlasek.php';
+							
+
+						break;
+						case 31;  //njpark
+							require 'forms/nj_park.php';
+						break;
+						case 300;  //krakonos
+							echo '<p>Registrace na tento seriál je v tuto chvíli mimo provoz, své požadavky na volná startovní čísla pište na timechip.cz@gmail.com</p>';
+						break;
+
+						case 30;  //krakonos
+						require 'forms/endurocc_dvojice.php';
+						
+						break;
+						
 
 
 

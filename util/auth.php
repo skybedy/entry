@@ -50,6 +50,11 @@ class Auth{
                 $log = 'detmarovicka10';
                 $pas = 'koq54Oiwe';
             break;
+            case 31: // behnjparkem
+                $log = 'bnjp';
+                $pas = 'KoJhtPo754';
+            break;
+
 
             
 
