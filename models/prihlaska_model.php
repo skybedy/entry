@@ -182,16 +182,19 @@ class Prihlaska_Model extends Model{
 	    case 6: //Ctyrkolky šikl
 		$this->xhrSaveToDBTymyCtyrkolkySikl();
 	    break;
-	}
+	    case 7: //
+			$this->xhrSaveToDBTymy();
+		break;
+		}
     }
     
     public function xhrOvereni(){
-	switch($_POST['typ_prihlasky']){
-	    case 1:
-		return $this->xhrOvereniJednotlivci();
-	    break;
-	    case 2:
-		return $this->xhrOvereniTymy();
+		switch($_POST['typ_prihlasky']){
+	    	case 1:
+				return $this->xhrOvereniJednotlivci();
+	    	break;
+	    	case 2:
+				return $this->xhrOvereniTymy();
 	    break;
 	    case 4:
 		return $this->xhrOvereniHobbyEnduro();
@@ -202,6 +205,10 @@ class Prihlaska_Model extends Model{
 	    case 6:
 		return $this->xhrOvereniTymy();
 	    break;
+		case 7:
+			return $this->xhrOvereniTymy();
+		break;
+
 	}
     }
 
@@ -315,7 +322,10 @@ class Prihlaska_Model extends Model{
         $str .= (isset($_POST['telefon_1_tym'])) ? ('<tr><td class="align_left">Telefon:</td><td class="align_right">'.$_POST['telefon_1_tym'].'</td></tr>') : ('');
         $str .= (isset($_POST['telefon_2_tym'])) ? ('<tr><td class="align_left">Alternativní telefon :</td><td class="align_right">'.$_POST['telefon_2_tym'].'</td></tr>') : ('');
         $str .= (isset($_POST['id_kategorie'])) ? ('<tr><td class="align_left">Kategorie</td><td class="align_right">'.$this->VyberKategoriePodleId($_POST['id_kategorie']).'</td></tr>') : ('');
-        for($i=1;$i<=$_POST['pocet_clenu'];$i++){
+        $str .= (isset($_POST['ids'])) ? ('<tr><td class="align_left">Startovni cislo</td><td class="align_right">'.$_POST['ids'].'</td></tr>') : ('');
+        
+		
+		for($i=1;$i<=$_POST['pocet_clenu'];$i++){
             $str .= '<thead><th colspan="2">Závodník '.$i.'</th></thead>';
             $str .= (isset($_POST['jmeno_1_'.$i]) && isset($_POST['prijmeni_1_'.$i])) ? ('<tr><td class="align_left">Jméno a příjmení</td><td class="align_right">'.$_POST['jmeno_1_'.$i].' '.$_POST['prijmeni_1_'.$i].'</td></tr>') : ('');
             $str .= (isset($_POST['pohlavi_'.$i])) ? ('<tr><td class="align_left">Pohlaví</td><td class="align_right">'.$this->pohlavi[$_POST['pohlavi_'.$i]].'</td></tr>') : ('');
@@ -402,12 +412,16 @@ class Prihlaska_Model extends Model{
 		$str .= 'Není možné se přihlásit v rámci jednoho závodu 2x do stejné kategorie.<br />';
 		$str .= $dovetek;
 	    break;
-	    case 'uspesne_prihlaseni':
+	    case 'uspesne_prihlaseni_zal':
 	    $str .= 'Děkujeme za přihlášení, na vaši e-mailovou adresu byla odeslána zpráva s dalšími informacemi.<br />
 V případě, že vám e-mail nepřijde (zkontrolujte si i složku s nevyžádanou poštou), nenajdete se ve výpisu přihlášek, nebo narazíte na jiný problém, kontaktujte nás prosím buď prostřednictvím e-mailu na <a href="mailto:info@timechip.cz">info@timechip.cz</a>, nebo telefonicky
 na +420 776131313.';
 	    break;
 	    
+		case 'uspesne_prihlaseni':
+			$str .= 'Děkujeme za přihlášení, v případě, že se neobjevíte ve výpisu přihlášek, nebo narazíte na jiný problém, kontaktujte nás prosím buď prostřednictvím e-mailu na <a href="mailto:timechip.cz@gmail.com">timechip.cz@gmail.com</a>, nebo telefonicky
+	na +420 776131313.';
+			break;
 	
 	}
 	return $str;
@@ -795,6 +809,7 @@ na +420 776131313.';
 	(isset($this->udaje['mail_tym'])) ? ($vlozeni['mail'] = $this->udaje['mail_tym']) : ('');
 	(isset($this->udaje['telefon_tym'])) ? ($vlozeni['telefon'] = $this->udaje['telefon_tym']) : ('');
 	(isset($this->udaje['poradi_podzavodu'])) ? ($vlozeni['poradi_podzavodu'] = $this->udaje['poradi_podzavodu']) : ('');
+	(isset($this->udaje['ids'])) ? ($vlozeni['ids'] = $this->udaje['ids']) : ('');
 	if(isset($this->udaje['id_kategorie'])){
 	    $vlozeni['id_kategorie'] = $this->udaje['id_kategorie'];
 	}
@@ -856,7 +871,15 @@ na +420 776131313.';
 		    $sth1 = $this->db->prepare($sql1);
 		    $sth1->execute();
 		}
-		$this->MailZavodnikovi('');
+
+		if($this->udaje['typ_prihlasky'] == 7)
+		{
+			$sql3 = "UPDATE ids_endurocc SET volne = NULL WHERE ids = {$this->udaje['ids']} AND poradi_podzavodu = {$this->udaje['poradi_podzavodu']}";
+			echo $sql3;
+			$sth3 = $this->db->prepare($sql3);
+			$sth3->execute(Array(':ids' => $this->udaje['ids'],':poradi_podzavodu' => $this->udaje['poradi_podzavodu']));
+		}
+		//$this->MailZavodnikovi('');
 		unset($_POST);
 	    }
 	}

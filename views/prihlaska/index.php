@@ -415,10 +415,53 @@
 						break;
 
 						case 30;  //krakonos
-						require 'forms/endurocc_dvojice.php';
+						require 'forms/endurocc_dvojice_zal.php';
 						
 						break;
 						
+
+
+
+						case 3000: //endurocc 
+							if(Session::get('poradi_podzavodu'))
+							{
+								 $poradi_podzavodu = Session::get('poradi_podzavodu'); 
+							}
+							else{ 
+								$poradi_podzavodu = false; 
+							}	
+
+					?>		
+								
+							
+								
+						 <div class="form-group"> 
+							<select class="form-control" id="vyber_zavodu" onchange="window.location = 'prihlaska/poradi-po zavoduf+this.options[this.selectedIndex].value+";" name="vyber_zavodu"› 
+								<option value="">Vyberte, kterg se Andel chcete absolvovat</option> 
+								<option value="1" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 1) ? ('selected="selected"') : ('')) ?> >Dospeli dvojice</option> 
+						    	<option value="2" <?php echo ((isset($poradi_podzavodu) && $poradi_podzavodu == 2) ? ('selected="selected"') : ('')) ?> >Jednotlivci deti</option> 
+							</select>
+						</div> 
+						
+						<?php 
+						   if($poradi_podzavodu == 1)
+						   {
+							require 'forms/endurocc_dvojice.php';
+						   }
+							else{ 
+								require 'forms/enduro_deti.php';
+						   } 
+						break; //konec ENDUROCC 
+							
+							
+
+
+
+
+
+
+
+
 
 
 

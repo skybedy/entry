@@ -56,4 +56,39 @@ $(function(){
         }
         //return false;
     });
+
+
+
+    $('#vyber_kategorie_ecc').change(function(){
+        var str = "";
+        var poradi_podzavodu = $('[name="poradi_podzavodu"]').val();
+        var id_kategorie = $(this).val();
+        if(id_kategorie == 470)
+        {
+            id_kategorie = 469;
+        } 
+
+        var url = 'https://timechip.cz/api/start-number-choice-endurocc/'+id_kategorie;
+        $.get(url,function(data){
+
+          str += '<option value="" selected disabled>Výběr startovních čísel</option>';
+           
+            $.each(data, function(key,value) {
+                str += '<option value="'+value.ids+'">'+value.ids+'</option>';
+            });
+           
+            $('#ids').html(str);
+            
+
+        });
+
+
+    });
+
 });
+
+
+
+
+
+
